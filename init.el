@@ -342,7 +342,7 @@
       auto-revert-verbose nil))
 
 
-;;; A simple visible bell which works in all terminal types
+;; A simple visible bell which works in all terminal types
 (use-package mode-line-bell
   :ensure t
   :hook (after-init . mode-line-bell-mode))
@@ -355,6 +355,11 @@
   (setq-default beacon-size 20)
   :config
   (beacon-mode 1))
+
+(when (boundp 'display-fill-column-indicator)
+  (setq-default indicate-buffer-boundaries 'left)
+  (setq-default display-fill-column-indicator-character ?\u254e)
+  (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode))
 
 
 ;; Treat undo history as a tree
