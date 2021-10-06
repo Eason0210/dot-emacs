@@ -73,7 +73,6 @@
   :bind ("C-h y" . describe-personal-keybindings))
 
 
-
 ;;; scratch
 
 (use-package scratch :ensure t)
@@ -137,11 +136,6 @@
 
 ;;; use-package for some core Emacs packages.
 
-
-;; Automatically reload files was modified by external program
-(use-package autorevert
-  :diminish
-  :hook (after-init . global-auto-revert-mode))
 
 (use-package dired
   :demand t
@@ -335,6 +329,17 @@
  ;; truncate-lines nil
  truncate-partial-width-windows nil
  tooltip-delay 1.5)
+
+(add-hook 'after-init-hook 'delete-selection-mode)
+
+
+(use-package autorevert
+  :diminish
+  :hook (after-init . global-auto-revert-mode)
+  :config
+  (setq global-auto-revert-non-file-buffers t
+      auto-revert-verbose nil))
+
 
 ;;; A simple visible bell which works in all terminal types
 (use-package mode-line-bell
