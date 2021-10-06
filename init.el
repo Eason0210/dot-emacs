@@ -468,6 +468,8 @@
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
+(add-hook 'prog-mode-hook 'goto-address-prog-mode)
+(setq goto-address-mail-face 'link)
 
 ;;; Programming languages support
 
