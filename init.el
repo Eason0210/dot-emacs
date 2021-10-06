@@ -366,6 +366,17 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 
+(use-package symbol-overlay
+  :diminish
+  :ensure t
+  :hook
+  ((prog-mode html-mode yaml-mode conf-mode) . symbol-overlay-mode)
+  :bind (:map symbol-overlay-mode
+              ("M-i" . symbol-overlay-put)        
+              ("M-n" . symbol-overlay-jump-next)
+              ("M-p" . symbol-overlay-jump-prev)))
+
+
 ;; Treat undo history as a tree
 (use-package undo-tree
   :ensure t
