@@ -380,6 +380,14 @@
               ("M-n" . symbol-overlay-jump-next)
               ("M-p" . symbol-overlay-jump-prev)))
 
+(use-package move-dup
+  :ensure t
+  :bind (
+         ("C-c d" . move-dup-duplicate-down)
+         ("C-c u" . move-dup-duplicate-up)
+         ([M-up] . move-dup-move-lines-up)
+         ([M-down] . move-dup-move-lines-down)))
+
 
 ;; Treat undo history as a tree
 (use-package undo-tree
@@ -493,6 +501,8 @@
   :bind (:map emacs-lisp-mode-map ("<return>" . paredit-newline))
   :hook (paredit-mode
          . (lambda ()
+             (unbind-key [M-up] paredit-mode-map)
+             (unbind-key [M-down] paredit-mode-map)
              (unbind-key "M-r" paredit-mode-map)
              (unbind-key "M-s" paredit-mode-map)))
   :config
