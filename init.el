@@ -453,9 +453,21 @@
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
 
+
+;;; Settings for tracking recent files
+
+(use-package recentf
+  :hook (after-init . recentf-mode)
+  :config
+  (setq-default
+   recentf-max-saved-items 1000
+   recentf-exclude `("/tmp/" "/ssh:" ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
+
+
 ;;; Miscellaneous config
 
 (defalias 'yes-or-no-p #'y-or-n-p)
+
 
 ;;; Programming languages support
 
