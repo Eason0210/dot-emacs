@@ -397,6 +397,15 @@
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+(use-package diff-hl
+  :ensure t
+  :bind (:map diff-hl-mode
+              ("<left-fringe> <mouse-1>" . diff-hl-diff-goto-hunk))
+  :hook
+  (magit-post-refresh . diff-hl-magit-post-refresh)
+  (after-init . global-diff-hl-mode))
+  
+
   
 ;;; Allow access from emacsclient
 (add-hook 'after-init-hook
