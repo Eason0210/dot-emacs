@@ -427,6 +427,16 @@
 (use-package cmake-mode :ensure t)
 (use-package cmake-font-lock :ensure t)
 
+;; Haskell mode
+
+(use-package haskell-mode
+  :ensure t
+  :hook
+  (haskell-mode . interactive-haskell-mode)
+  (haskell-mode . turn-on-haskell-indentation))
+
+
+  
 ;;; Allow access from emacsclient
 (add-hook 'after-init-hook
           (lambda ()
