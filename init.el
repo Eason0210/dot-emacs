@@ -383,6 +383,13 @@
     (ns-auto-titlebar-mode 1)))
   
 
+;; version control
+
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status)))
+
+  
 ;;; Allow access from emacsclient
 (add-hook 'after-init-hook
           (lambda ()
