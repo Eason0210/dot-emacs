@@ -314,6 +314,10 @@
   (add-hook 'after-init-hook 'electric-pair-mode))
 (add-hook 'after-init-hook 'electric-indent-mode)
 
+;; Show matching parens
+(add-hook 'after-init-hook 'show-paren-mode)
+
+
 (setq-default
  blink-cursor-interval 0.4
  bookmark-default-file (locate-user-emacs-file ".bookmarks.el")
