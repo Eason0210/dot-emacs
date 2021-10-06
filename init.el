@@ -315,6 +315,9 @@
 
 ;;; editing utils
 
+(when (fboundp 'electric-pair-mode)
+  (add-hook 'after-init-hook 'electric-pair-mode))
+(add-hook 'after-init-hook 'electric-indent-mode)
 
 (setq-default
  blink-cursor-interval 0.4
