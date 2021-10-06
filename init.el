@@ -134,8 +134,7 @@
   (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p))
 
 
-;;; use-package for some core Emacs packages.
-
+;;; dired mode
 
 (use-package dired
   :demand t
@@ -149,6 +148,8 @@
   :ensure t
   :init
   (diredfl-global-mode))
+
+;;; show line number
 
 (use-package display-line-numbers
   :config
