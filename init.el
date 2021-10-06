@@ -435,6 +435,31 @@
   (haskell-mode . interactive-haskell-mode)
   (haskell-mode . turn-on-haskell-indentation))
 
+;; lisp mode
+
+(use-package paredit
+  :ensure t
+  :diminish
+  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
+  :bind (:map paredit-mode-map
+              ("[")
+              ;; ("M-k"   . paredit-raise-sexp)
+              ("M-I"   . paredit-splice-sexp)
+              ;; ("C-M-l" . paredit-recentre-on-sexp)
+              ("C-c ( n"   . paredit-add-to-next-list)
+              ("C-c ( p"   . paredit-add-to-previous-list)
+              ("C-c ( j"   . paredit-join-with-next-list)
+              ("C-c ( J"   . paredit-join-with-previous-list))
+  :bind (:map lisp-mode-map       ("<return>" . paredit-newline))
+  :bind (:map emacs-lisp-mode-map ("<return>" . paredit-newline))
+  :hook (paredit-mode
+         . (lambda ()
+             (unbind-key "M-r" paredit-mode-map)
+             (unbind-key "M-s" paredit-mode-map)))
+  :config
+  (require 'eldoc)
+  (eldoc-add-command 'paredit-backward-delete
+                     'paredit-close-round))
 
   
 ;;; Allow access from emacsclient
