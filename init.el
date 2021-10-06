@@ -406,6 +406,26 @@
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
   
+;;; Program languages support
+
+;; C/C++ Mode
+(use-package cc-mode
+  :bind (:map c-mode-base-map
+         ("C-c c" . compile))
+  :hook (c-mode-common . (lambda () (c-set-style "stroustrup")))
+  :init (setq-default c-basic-offset 4))
+
+(use-package modern-cpp-font-lock
+  :ensure t
+  :init
+  (modern-c++-font-lock-global-mode +1))
+
+(use-package clang-format
+  :ensure t
+  :after cc-mode)
+
+(use-package cmake-mode :ensure t)
+(use-package cmake-font-lock :ensure t)
 
 ;;; Allow access from emacsclient
 (add-hook 'after-init-hook
