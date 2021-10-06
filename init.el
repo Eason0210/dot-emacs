@@ -452,13 +452,18 @@
   (magit-post-refresh . diff-hl-magit-post-refresh)
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
-  
+
+;;; Miscellaneous config
+
+(defalias 'yes-or-no-p #'y-or-n-p)
+
 ;;; Programming languages support
 
 ;; C/C++ Mode
+
 (use-package cc-mode
   :bind (:map c-mode-base-map
-         ("C-c c" . compile))
+              ("C-c c" . compile))
   :hook (c-mode-common . (lambda () (c-set-style "stroustrup")))
   :init (setq-default c-basic-offset 4))
 
