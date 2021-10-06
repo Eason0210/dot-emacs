@@ -134,7 +134,7 @@
   (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p))
 
 
-;;; dired mode
+;;; Dired mode
 
 (use-package dired
   :demand t
@@ -149,14 +149,15 @@
   :init
   (diredfl-global-mode))
 
-;;; show line number
+;;; Show line number
 
 (use-package display-line-numbers
   :config
   (global-display-line-numbers-mode))
 
 
-;;; Minibuffer
+;;; Minibuffer config
+
 (use-package vertico
   :ensure t
   :demand t
@@ -197,7 +198,6 @@
   ;; (setq read-extended-command-predicate
   ;;       #'command-completion-default-include-p)
 
-  ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 
 
@@ -308,7 +308,7 @@
   (setq marginalia-annotators '(marginalia-annotators-heavy
                                 marginalia-annotators-light)))
 
-;;; editing utils
+;;; Editing utils
 
 (when (fboundp 'electric-pair-mode)
   (add-hook 'after-init-hook 'electric-pair-mode))
@@ -438,7 +438,7 @@
     (ns-auto-titlebar-mode 1)))
   
 
-;; version control
+;;; Version control
 
 (use-package magit
   :ensure t
@@ -453,7 +453,7 @@
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
   
-;;; Program languages support
+;;; Programming languages support
 
 ;; C/C++ Mode
 (use-package cc-mode
@@ -467,10 +467,6 @@
   :init
   (modern-c++-font-lock-global-mode +1))
 
-(use-package clang-format
-  :ensure t
-  :after cc-mode)
-
 (use-package cmake-mode :ensure t)
 (use-package cmake-font-lock :ensure t)
 
@@ -482,7 +478,7 @@
   (haskell-mode . interactive-haskell-mode)
   (haskell-mode . turn-on-haskell-indentation))
 
-;; lisp mode
+;; Lisp mode
 
 (use-package paredit
   :ensure t
@@ -512,6 +508,7 @@
 
   
 ;;; Allow access from emacsclient
+
 (add-hook 'after-init-hook
           (lambda ()
             (require 'server)
@@ -519,5 +516,6 @@
               (server-start))))
 
 ;;; Variables configured via the interactive 'customize' interface
+
 (when (file-exists-p custom-file)
   (load custom-file))
