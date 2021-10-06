@@ -336,6 +336,12 @@
  truncate-partial-width-windows nil
  tooltip-delay 1.5)
 
+;;; A simple visible bell which works in all terminal types
+(use-package mode-line-bell
+  :ensure t
+  :hook (after-init . mode-line-bell-mode))
+
+
 (use-package beacon
   :ensure t
   :init
