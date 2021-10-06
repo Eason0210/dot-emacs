@@ -305,6 +305,14 @@
             (car (project-roots project))))))
 
 
+(use-package marginalia
+  :ensure t
+  :demand t
+  :config
+  (marginalia-mode 1)
+  (setq marginalia-annotators '(marginalia-annotators-heavy
+                                marginalia-annotators-light)))
+
 ;;; editing utils
 
 
