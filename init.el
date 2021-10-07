@@ -463,6 +463,10 @@
    recentf-max-saved-items 1000
    recentf-exclude `("/tmp/" "/ssh:" ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
 
+;;; ibuffer settings
+
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer))
 
 ;;; Miscellaneous config
 
