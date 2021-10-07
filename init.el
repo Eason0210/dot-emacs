@@ -473,6 +473,15 @@
 (add-hook 'prog-mode-hook 'goto-address-prog-mode)
 (setq goto-address-mail-face 'link)
 
+
+;; Auto save
+(use-package auto-save
+  :config
+  (setq auto-save-silent t)
+  (setq auto-save-idle 1.5)
+  (auto-save-enable))
+
+
 ;;; Programming languages support
 
 ;; C/C++ Mode
