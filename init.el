@@ -203,13 +203,12 @@
 
 (use-package company
   :ensure t
-  :demand t
+  :diminish
   :bind
   (:map company-active-map
         ("TAB" . company-complete-selection)
         ("<tab>" . company-complete-selection))
-  :config
-  (add-hook 'after-init-hook #'global-company-mode))
+  :hook (after-init . global-company-mode))
 
 
 (use-package consult
