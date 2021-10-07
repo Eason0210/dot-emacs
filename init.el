@@ -529,7 +529,11 @@
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
-  
+;; Rust mode
+
+(use-package rust-mode :ensure t)
+
+
 ;;; Allow access from emacsclient
 
 (add-hook 'after-init-hook
