@@ -35,6 +35,7 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+(defconst *spell-check-support-enabled* t) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
 
 ;; Adjust garbage collection thresholds during startup, and thereafter
@@ -742,7 +743,7 @@ typical word processor."
           (setq-local show-trailing-whitespace nil)
           (setq-local line-spacing 0.2)
           (setq-local electric-pair-mode nil)
-          ;; (ignore-errors (flyspell-mode 1))
+          (ignore-errors (flyspell-mode 1))
           (visual-line-mode 1))
       (kill-local-variable 'truncate-lines)
       (kill-local-variable 'word-wrap)
@@ -754,7 +755,7 @@ typical word processor."
       (kill-local-variable 'electric-pair-mode)
       (buffer-face-mode -1)
       ;; (delete-selection-mode -1)
-      ;; (flyspell-mode -1)
+      (flyspell-mode -1)
       (visual-line-mode -1)
       (when (fboundp 'writeroom-mode)
         (writeroom-mode 0)))))
@@ -798,6 +799,30 @@ typical word processor."
   :ensure t
   :bind (("C-c t i" . osx-dictionary-search-input)
          ("C-c t x" . osx-dictionary-search-pointer)))
+
+
+;;; Spell check settings
+
+(use-package flyspell
+  :diminish
+  :if (and (executable-find "aspell") *spell-check-support-enabled*)
+  ;; Add spell-checking in comments for all programming language modes
+  :hook ((prog-mode . flyspell-prog-mode)
+         (flyspell-mode . (lambda ()
+                            (dolist (key '("C-;" "C-."))
+                              (unbind-key key flyspell-mode-map)))))
+  :init (setq flyspell-issue-message-flag nil
+              ispell-program-name "aspell"
+              ispell-extra-args '("--sug-mode=fast" "--lang=en_US" "--camel-case")
+              ispell-personal-dictionary
+              (expand-file-name "en_US.personal" "~/.config/aspell/"))
+  :config
+  ;; Correcting words with flyspell via completing-read
+  (use-package flyspell-correct
+    :ensure t
+    :after flyspell
+    :bind (:map flyspell-mode-map ("C-," . flyspell-correct-wrapper))))
+
 
 ;;; Font
 
