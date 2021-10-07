@@ -542,6 +542,19 @@
 (use-package nix-mode :ensure t)
 (use-package nixpkgs-fmt :after nix-mode)
 
+;;; LSP
+
+(use-package eglot
+  :ensure t
+  :bind (:map eglot-mode-map
+         ("C-c l a" . 'eglot-code-actions)         
+         ("C-c l r" . 'eglot-rename)
+         ("C-c l f" . 'eglot-format)
+         ("C-c l d" . 'eldoc))
+  :config
+  (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
+
 ;; Dictionaries
 
 (use-package osx-dictionary
