@@ -427,6 +427,14 @@ If all failed, try to complete the common part with `company-complete-common'"
          ([M-up] . move-dup-move-lines-up)
          ([M-down] . move-dup-move-lines-down)))
 
+;; Display available keybindings
+(use-package which-key
+  :diminish
+  :ensure t
+  :hook (after-init . which-key-mode)
+  :config
+  (setq-default which-key-idle-delay 1.5))
+
 ;; Treat undo history as a tree
 (use-package undo-tree
   :ensure t
