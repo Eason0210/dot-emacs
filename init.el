@@ -600,6 +600,7 @@
 
 
 ;; Roam
+
 (when (and (executable-find "sqlite3") (executable-find "cc"))
   (use-package org-roam
     :ensure t
@@ -629,7 +630,7 @@
                    (window-height . fit-window-to-buffer)))))
 
 
-;; Dictionaries
+;;; Dictionaries
 
 (use-package osx-dictionary
   :if *is-a-mac*
