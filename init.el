@@ -632,6 +632,13 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 (use-package rust-mode :ensure t)
 
+;; Markdown support
+
+(use-package markdown-mode
+  :ensure t
+  :mode (("\\.md\\.html\\'" . markdown-mode)
+         ("README\\.md\\'" . gfm-mode)))
+
 ;; Support Yaml files
 
 (use-package yaml-mode
