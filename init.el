@@ -571,6 +571,34 @@
     :default "c++"))
 
 
+;;; Org configurations
+
+(use-package org
+  :bind (("C-c a" . org-agenda)
+         ("C-c x" . org-capture)
+         :map org-mode-map
+         ("C-c i a" . org-id-get-create))
+  :config
+  ;; To speed up startup, don't put to init section
+  (setq org-hide-emphasis-markers t)
+
+  ;; Babel
+  (setq org-confirm-babel-evaluate nil
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   `((C . t)
+     (calc . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (haskell . t)
+     (python . t)
+     (sql . t)
+     (sqlite . t))))
+
+
 ;; Dictionaries
 
 (use-package osx-dictionary
