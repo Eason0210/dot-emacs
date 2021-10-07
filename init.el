@@ -544,6 +544,13 @@
 (use-package nix-mode :ensure t)
 (use-package nixpkgs-fmt :after nix-mode)
 
+;; Dictionaries
+
+(use-package osx-dictionary
+  :if *is-a-mac*
+  :ensure t
+  :bind (("C-c t i" . osx-dictionary-search-input)
+         ("C-c t x" . osx-dictionary-search-pointer)))
 
 ;;; Allow access from emacsclient
 
