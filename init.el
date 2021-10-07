@@ -430,12 +430,11 @@
   (add-to-list 'default-frame-alist no-border)
   (add-to-list 'initial-frame-alist no-border))
 
-
-(when *is-a-mac*
-  (use-package ns-auto-titlebar
-    :ensure t
-    :config
-    (ns-auto-titlebar-mode 1)))
+(use-package ns-auto-titlebar
+  :if *is-a-mac*
+  :ensure t
+  :config
+  (ns-auto-titlebar-mode 1))
   
 
 ;;; Version control
