@@ -596,7 +596,19 @@
      (haskell . t)
      (python . t)
      (sql . t)
-     (sqlite . t))))
+     (sqlite . t)))
+
+  ;; Export to docx
+  (defun org-export-docx ()
+    (interactive)
+    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
+          (template-file (expand-file-name "template/template.docx"
+                                           user-emacs-directory)))
+      (shell-command (format "pandoc %s -o %s --reference-doc=%s"
+                             (buffer-file-name)
+                             docx-file
+                             template-file))
+      (message "Convert finish: %s" docx-file))))
 
 
 ;; Roam
