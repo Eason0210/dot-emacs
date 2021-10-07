@@ -555,6 +555,22 @@
   (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
 
+
+;;; Configuration for quickrun
+
+(use-package quickrun
+  :ensure t
+  :bind (("<f5>" . quickrun)
+         ("C-<f5>" . quickrun-shell))
+  :config
+  (quickrun-add-command "c++/c1z"
+    '((:command . "g++")
+      (:exec    . ("%c -std=c++1z %o -o %e %s"
+		   "%e %a"))
+      (:remove  . ("%e")))
+    :default "c++"))
+
+
 ;; Dictionaries
 
 (use-package osx-dictionary
