@@ -540,7 +540,7 @@
 ;; Support for the Nix package manager
 
 (use-package nix-mode :ensure t)
-(use-package nixpkgs-fmt :after nix-mode)
+(use-package nixpkgs-fmt :after (nix-mode))
 
 ;;; LSP
 
