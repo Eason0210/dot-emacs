@@ -885,3 +885,7 @@ typical word processor."
 
 (when (file-exists-p custom-file)
   (load custom-file))
+
+
+(provide 'init)
+;;; init.el ends here
