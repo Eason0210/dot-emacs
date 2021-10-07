@@ -794,6 +794,19 @@ typical word processor."
          ("C-c t x" . osx-dictionary-search-pointer)))
 
 
+(use-package fanyi
+  :ensure t
+  :bind (("C-c t f" . fanyi-dwim)
+         ("C-c t d" . fanyi-dwim2))
+  :config
+  (setq fanyi-haici-chart-inhibit-same-window t)
+  :custom
+  (fanyi-providers '(fanyi-haici-provider
+                     fanyi-youdao-thesaurus-provider
+                     fanyi-etymon-provider
+                     fanyi-longman-provider)))
+
+
 ;;; Spell check settings
 
 (use-package flyspell
