@@ -133,6 +133,22 @@
   (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p))
 
 
+;;; Configure FlyCheck global behavior
+
+(use-package flycheck
+  :ensure t
+  :hook (after-init . global-flycheck-mode)
+  :init
+  (setq flycheck-check-syntax-automatically '(idle-change new-line mode-enabled))
+  :config
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
+  
+  (use-package flycheck-color-mode-line
+    :ensure t
+    :hook (flycheck-mode . flycheck-color-mode-line-mode)
+    :after flycheck))
+
+
 ;;; Dired mode
 
 (use-package dired
