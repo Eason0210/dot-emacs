@@ -539,6 +539,11 @@
   :ensure t
   :hook (yaml-mode . goto-address-prog-mode))
 
+;; Support for the Nix package manager
+
+(use-package nix-mode :ensure t)
+(use-package nixpkgs-fmt :after nix-mode)
+
 
 ;;; Allow access from emacsclient
 
