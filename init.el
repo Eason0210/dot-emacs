@@ -116,7 +116,7 @@
   ;; Don't prompt to confirm theme safety. This avoids problems with
   ;; first-time startup on Emacs > 26.3.
   (setq custom-safe-themes t)
-  ;; If you don't customize it, this is the theme you get.  
+  ;; If you don't customize it, this is the theme you get.
   (setq-default custom-enabled-themes '(sanityinc-tomorrow-bright))
   (add-hook 'after-init-hook 'reapply-themes))
 
@@ -142,7 +142,7 @@
   (setq flycheck-check-syntax-automatically '(idle-change new-line mode-enabled))
   :config
   (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
-  
+
   (use-package flycheck-color-mode-line
     :ensure t
     :hook (flycheck-mode . flycheck-color-mode-line-mode)
@@ -185,7 +185,7 @@
   (defun aqua/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless)))
   (add-hook 'minibuffer-setup-hook 'aqua/use-orderless-in-minibuffer)
-  
+
   (setq completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
@@ -431,7 +431,7 @@ If all failed, try to complete the common part with `company-complete-common'"
   :hook
   ((prog-mode html-mode yaml-mode conf-mode) . symbol-overlay-mode)
   :bind (:map symbol-overlay-mode
-              ("M-i" . symbol-overlay-put)        
+              ("M-i" . symbol-overlay-put)
               ("M-n" . symbol-overlay-jump-next)
               ("M-p" . symbol-overlay-jump-prev)))
 
@@ -497,7 +497,7 @@ If all failed, try to complete the common part with `company-complete-common'"
   :ensure t
   :config
   (ns-auto-titlebar-mode 1))
-  
+
 
 ;;; Version control
 
@@ -675,8 +675,8 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 (use-package eglot
   :ensure t
-  :bind (:map eglot-mode-map              
-              ("C-c l a" . 'eglot-code-actions)         
+  :bind (:map eglot-mode-map
+              ("C-c l a" . 'eglot-code-actions)
               ("C-c l r" . 'eglot-rename)
               ("C-c l f" . 'eglot-format)
               ("C-c l d" . 'eldoc))
@@ -807,7 +807,7 @@ typical word processor."
     :config
     (unless (file-exists-p org-roam-directory)
       (make-directory org-roam-directory t))
-    
+
     (add-to-list 'display-buffer-alist
                  '("\\*org-roam\\*"
                    (display-buffer-in-direction)
@@ -904,12 +904,12 @@ typical word processor."
   (dolist (font '("Segoe UI Symbol" "Apple Color Emoji" "Symbola" "Symbol"))
     (if (font-installed-p font)
         (set-fontset-font t 'unicode font nil 'prepend)))
-  
+
   (dolist (font '("Microsoft Yahei" "Hiragino Sans GB" "Noto Sans Mono CJK SC"))
     (if (font-installed-p font)
        (set-fontset-font t '(#x4e00 . #x9fff) font))))
 
-  
+
 ;;; Allow access from emacsclient
 
 (use-package server
