@@ -519,7 +519,13 @@
     (interactive)
     (if (equal rime-show-candidate nil)
         (setq rime-show-candidate 'minibuffer)
-      (setq rime-show-candidate nil))))
+      (setq rime-show-candidate nil)))
+
+  ;; change cursor color automatically
+  (use-package im-cursor-chg
+    :after (rime)
+    :config
+    (cursor-chg-mode 1)))
 
 
 ;;; Programming languages support
