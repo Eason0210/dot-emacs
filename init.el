@@ -50,8 +50,8 @@
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
-;;; package.el & use-package setup
 
+;;; package.el & use-package setup
 
 (setq package-archives
       '(("melpa" . "https://melpa.org/packages/")
@@ -74,25 +74,24 @@
   :bind ("C-h y" . describe-personal-keybindings))
 
 
-;;; scratch
+;;; Scratch
 
 (use-package scratch :ensure t)
 (setq-default initial-scratch-message
               (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
-;;; osx-key
+;;; Osx-key
 
 (when *is-a-mac*
   (setq mac-command-modifier 'meta)
   (setq mac-option-modifier 'none))
 
-;;; themes
+;;; Themes
 
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
   :init
   ;; Ensure that themes will be applied even if they have not been customized
-
   (defun reapply-themes ()
     "Forcibly load the themes listed in `custom-enabled-themes'."
     (dolist (theme custom-enabled-themes)
@@ -101,7 +100,6 @@
     (custom-set-variables `(custom-enabled-themes (quote ,custom-enabled-themes))))
 
   ;; Toggle between light and dark
-
   (defun light ()
     "Activate a light color theme."
     (interactive)
@@ -140,7 +138,6 @@
 (use-package dired
   :demand t
   :init
-  ;; (setq-default dired-listing-switches "-alh")
   (setq-default dired-kill-when-opening-new-dired-buffer t)
   :config
   (setq dired-recursive-copies 'always))
@@ -343,7 +340,6 @@ If all failed, try to complete the common part with `company-complete-common'"
           (when-let (project (project-current))
             (car (project-roots project))))))
 
-
 (use-package marginalia
   :ensure t
   :demand t
@@ -360,7 +356,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 ;; Show matching parens
 (add-hook 'after-init-hook 'show-paren-mode)
-
 
 (setq-default
  blink-cursor-interval 0.4
@@ -389,13 +384,12 @@ If all failed, try to complete the common part with `company-complete-common'"
   (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil))
 
-
 ;; A simple visible bell which works in all terminal types
 (use-package mode-line-bell
   :ensure t
   :hook (after-init . mode-line-bell-mode))
 
-
+;; A light will shine on top of cursor when window scrolls
 (use-package beacon
   :ensure t
   :init
@@ -404,15 +398,16 @@ If all failed, try to complete the common part with `company-complete-common'"
   :config
   (beacon-mode 1))
 
+;; Display buffer boundaries and fill column indicator
 (when (boundp 'display-fill-column-indicator)
   (setq-default indicate-buffer-boundaries 'left)
   (setq-default display-fill-column-indicator-character ?\u254e)
   (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode))
 
+
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
-
 
 (use-package symbol-overlay
   :diminish
@@ -432,7 +427,6 @@ If all failed, try to complete the common part with `company-complete-common'"
          ([M-up] . move-dup-move-lines-up)
          ([M-down] . move-dup-move-lines-down)))
 
-
 ;; Treat undo history as a tree
 (use-package undo-tree
   :ensure t
@@ -448,8 +442,8 @@ If all failed, try to complete the common part with `company-complete-common'"
     (make-variable-buffer-local 'undo-tree-visualizer-diff)
     (setq-default undo-tree-visualizer-diff t)))
 
-;;; GUI frames
 
+;;; GUI frames
 
 ;; Suppress GUI features
 
@@ -506,10 +500,11 @@ If all failed, try to complete the common part with `company-complete-common'"
    recentf-max-saved-items 1000
    recentf-exclude `("/tmp/" "/ssh:" ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
 
-;;; ibuffer settings
+;;; Ibuffer settings
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
+
 
 ;;; Miscellaneous config
 
@@ -517,7 +512,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 (add-hook 'prog-mode-hook 'goto-address-prog-mode)
 (setq goto-address-mail-face 'link)
-
 
 ;; Auto save
 (use-package auto-save
@@ -558,7 +552,6 @@ If all failed, try to complete the common part with `company-complete-common'"
     (setq rime-librime-root  "~/emacs-data/librime/dist")
     (setq rime-emacs-module-header-root "~/.nix-profile/include"))
 
-  
   (defun rime-toggle-show-candidate ()
     "Use minibuffer for candidate if current is nil."
     (interactive)
@@ -642,7 +635,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 (use-package nix-mode :ensure t)
 (use-package nixpkgs-fmt :after (nix-mode))
 
-;; MSCL mode
+;;Support MSCL mode
 
 (use-package mscl-mode :mode "\\.pwx?macro\\'")
 
@@ -881,10 +874,12 @@ typical word processor."
             (unless (server-running-p)
               (server-start))))
 
+
 ;;; Variables configured via the interactive 'customize' interface
 
 (when (file-exists-p custom-file)
   (load custom-file))
+
 
 
 (provide 'init)
