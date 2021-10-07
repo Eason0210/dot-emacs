@@ -533,6 +533,12 @@
 
 (use-package rust-mode :ensure t)
 
+;; Support Yaml files
+
+(use-package yaml-mode
+  :ensure t
+  :hook (yaml-mode . goto-address-prog-mode))
+
 
 ;;; Allow access from emacsclient
 
