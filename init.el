@@ -166,15 +166,13 @@
 
 (use-package dired
   :ensure nil
-  :demand t
-  :init
-  (setq-default dired-kill-when-opening-new-dired-buffer t)
   :config
+  (setq-default dired-kill-when-opening-new-dired-buffer t)
   (setq dired-recursive-copies 'always))
 
 (use-package diredfl
-  :init
-  (diredfl-global-mode))
+  :config
+  (diredfl-global-mode 1))
 
 ;;; Show line number
 
