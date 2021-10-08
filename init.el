@@ -598,9 +598,6 @@ If all failed, try to complete the common part with `company-complete-common'"
   :init
   (modern-c++-font-lock-global-mode +1))
 
-(use-package cmake-mode)
-(use-package cmake-font-lock)
-
 
 ;; Haskell mode
 (use-package haskell-mode
