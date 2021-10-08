@@ -653,8 +653,12 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 
 ;; Support for the Nix package manager
-(use-package nix-mode)
-(use-package nixpkgs-fmt :after nix-mode)
+(use-package nix-mode :mode "\\.nix\\'")
+
+(use-package nixpkgs-fmt
+  :after nix-mode
+  :bind (:map nix-mode-map
+              ("C-c C-f" . nixpkgs-fmt)))
 
 
 ;;Support MSCL mode
