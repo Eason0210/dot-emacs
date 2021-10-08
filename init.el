@@ -78,7 +78,6 @@
 (use-package auto-package-update
   :custom
   (auto-package-update-interval 7)
-  (auto-package-update-prompt-before-update t)
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t)
   :config
@@ -138,9 +137,8 @@
 
 
 (use-package dimmer
-  :custom
-  (dimmer-fraction 0.15)
   :config
+  (setq-default dimmer-fraction 0.15)
   (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))
   (defun aqua/display-non-graphic-p ()
     (not (display-graphic-p)))
