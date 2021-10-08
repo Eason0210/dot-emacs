@@ -637,7 +637,8 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 
 ;; Rust mode
-(use-package rust-mode)
+(use-package rust-mode
+  :mode "\\.rs\\'")
 
 
 ;; Markdown support
