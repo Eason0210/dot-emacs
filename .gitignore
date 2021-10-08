@@ -51,3 +51,4 @@ site-lisp/package/
 /eln-cache/
 /server
 /devdocs
+.last-package-update-day

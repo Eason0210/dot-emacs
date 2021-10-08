@@ -74,6 +74,17 @@
 
 (eval-when-compile (require 'use-package))
 
+;; Auto update packages
+(use-package auto-package-update
+  :custom
+  (auto-package-update-interval 7)
+  (auto-package-update-prompt-before-update t)
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
+  :config
+  (auto-package-update-maybe))
+
+
 (use-package diminish)
 
 (use-package bind-key
