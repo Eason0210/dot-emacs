@@ -60,15 +60,21 @@
 (require 'package)
 (package-initialize)
 
+;; Setup `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(custom-set-variables
- '(use-package-enable-imenu-support t))
+
+;; Should set before loading `use-package'
+(eval-and-compile
+  (setq use-package-always-ensure t)
+  (setq use-package-expand-minimally t)
+  (setq use-package-compute-statistics t)
+  (setq use-package-enable-imenu-support t))
 
 (eval-when-compile (require 'use-package))
 
-(use-package diminish :ensure t)
+(use-package diminish)
 
 (use-package bind-key
   :bind ("C-h y" . describe-personal-keybindings))
@@ -76,7 +82,7 @@
 
 ;;; Scratch
 
-(use-package scratch :ensure t)
+(use-package scratch)
 (setq-default initial-scratch-message
               (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
@@ -89,7 +95,6 @@
 ;;; Themes
 
 (use-package color-theme-sanityinc-tomorrow
-  :ensure t
   :init
   ;; Ensure that themes will be applied even if they have not been customized
   (defun reapply-themes ()
@@ -122,7 +127,6 @@
 
 
 (use-package dimmer
-  :ensure t
   :init
   (defun sanityinc/display-non-graphic-p ()
     (not (display-graphic-p)))
@@ -136,7 +140,6 @@
 ;;; Configure FlyCheck global behavior
 
 (use-package flycheck
-  :ensure t
   :hook (after-init . global-flycheck-mode)
   :init
   (setq flycheck-check-syntax-automatically '(idle-change new-line mode-enabled))
@@ -144,7 +147,6 @@
   (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
 
   (use-package flycheck-color-mode-line
-    :ensure t
     :hook (flycheck-mode . flycheck-color-mode-line-mode)
     :after flycheck))
 
@@ -152,6 +154,7 @@
 ;;; Dired mode
 
 (use-package dired
+  :ensure nil
   :demand t
   :init
   (setq-default dired-kill-when-opening-new-dired-buffer t)
@@ -159,13 +162,13 @@
   (setq dired-recursive-copies 'always))
 
 (use-package diredfl
-  :ensure t
   :init
   (diredfl-global-mode))
 
 ;;; Show line number
 
 (use-package display-line-numbers
+  :ensure nil  
   :hook (prog-mode . display-line-numbers-mode)
   :config
   (setq-default display-line-numbers-width 3))
@@ -174,13 +177,11 @@
 ;;; Minibuffer config
 
 (use-package vertico
-  :ensure t
   :demand t
   :init
   (vertico-mode))
 
 (use-package orderless
-  :ensure t
   :init
   (defun aqua/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless)))
@@ -191,11 +192,13 @@
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
+  :ensure nil  
   :init
   (savehist-mode))
 
 ;; A few more useful configurations...
 (use-package emacs
+  :ensure nil  
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; Alternatively try `consult-completing-read-multiple'.
@@ -218,10 +221,9 @@
 
 ;; YASnippet
 (use-package yasnippet
-  :ensure t
   :diminish yas-minor-mode
   :init
-  (use-package yasnippet-snippets :ensure t :after yasnippet)
+  (use-package yasnippet-snippets :after yasnippet)
   :hook ((prog-mode org-mode) . yas-minor-mode)
   :bind
   (:map yas-minor-mode-map ("C-c C-n" . yas-expand-from-trigger-key))
@@ -242,7 +244,6 @@
 
 ;; Completion with company
 (use-package company
-  :ensure t
   :diminish
   :bind
   (:map company-active-map
@@ -270,7 +271,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 
 (use-package consult
-  :ensure t
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
          ("C-c m" . consult-mode-command)
@@ -357,7 +357,6 @@ If all failed, try to complete the common part with `company-complete-common'"
             (car (project-roots project))))))
 
 (use-package marginalia
-  :ensure t
   :demand t
   :config
   (marginalia-mode 1)
@@ -394,6 +393,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 
 (use-package autorevert
+  :ensure nil  
   :diminish
   :hook (after-init . global-auto-revert-mode)
   :config
@@ -402,12 +402,10 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 ;; A simple visible bell which works in all terminal types
 (use-package mode-line-bell
-  :ensure t
   :hook (after-init . mode-line-bell-mode))
 
 ;; A light will shine on top of cursor when window scrolls
 (use-package beacon
-  :ensure t
   :init
   (setq-default beacon-lighter "")
   (setq-default beacon-size 20)
@@ -422,12 +420,10 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 
 (use-package rainbow-delimiters
-  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package symbol-overlay
   :diminish
-  :ensure t
   :hook
   ((prog-mode html-mode yaml-mode conf-mode) . symbol-overlay-mode)
   :bind (:map symbol-overlay-mode
@@ -436,7 +432,6 @@ If all failed, try to complete the common part with `company-complete-common'"
               ("M-p" . symbol-overlay-jump-prev)))
 
 (use-package move-dup
-  :ensure t
   :bind (
          ("C-c d" . move-dup-duplicate-down)
          ("C-c u" . move-dup-duplicate-up)
@@ -446,14 +441,12 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;; Display available keybindings
 (use-package which-key
   :diminish
-  :ensure t
   :hook (after-init . which-key-mode)
   :config
   (setq-default which-key-idle-delay 1.5))
 
 ;; Treat undo history as a tree
 (use-package undo-tree
-  :ensure t
   :diminish
   :hook (after-init . global-undo-tree-mode)
   :init
@@ -494,7 +487,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 (use-package ns-auto-titlebar
   :if *is-a-mac*
-  :ensure t
   :config
   (ns-auto-titlebar-mode 1))
 
@@ -502,11 +494,9 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Version control
 
 (use-package magit
-  :ensure t
   :bind (("C-x g" . magit-status)))
 
 (use-package diff-hl
-  :ensure t
   :bind (:map diff-hl-mode
               ("<left-fringe> <mouse-1>" . diff-hl-diff-goto-hunk))
   :hook
@@ -518,6 +508,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Settings for tracking recent files
 
 (use-package recentf
+  :ensure nil  
   :hook (after-init . recentf-mode)
   :config
   (setq-default
@@ -527,6 +518,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Ibuffer settings
 
 (use-package ibuffer
+  :ensure nil  
   :bind ("C-x C-b" . ibuffer))
 
 
@@ -539,6 +531,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 ;; Auto save
 (use-package auto-save
+  :ensure nil  
   :config
   (setq auto-save-silent t)
   (setq auto-save-idle 1.5)
@@ -551,7 +544,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 (use-package rime
   :if rime-usr-data-exists-p
-  :ensure t
   :bind (("C-\\" . toggle-input-method)
          ("C-`" . rime-send-keybinding))
   :init
@@ -585,6 +577,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 
   ;; change cursor color automatically
   (use-package im-cursor-chg
+    :ensure nil
     :after (rime)
     :config
     (cursor-chg-mode 1)))
@@ -593,33 +586,30 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Programming languages support
 
 ;; C/C++ Mode
-
 (use-package cc-mode
+  :ensure nil
   :bind (:map c-mode-base-map
               ("C-c c" . compile))
   :hook (c-mode-common . (lambda () (c-set-style "stroustrup")))
   :init (setq-default c-basic-offset 4))
 
 (use-package modern-cpp-font-lock
-  :ensure t
   :init
   (modern-c++-font-lock-global-mode +1))
 
-(use-package cmake-mode :ensure t)
-(use-package cmake-font-lock :ensure t)
+(use-package cmake-mode)
+(use-package cmake-font-lock)
+
 
 ;; Haskell mode
-
 (use-package haskell-mode
-  :ensure t
   :hook
   (haskell-mode . interactive-haskell-mode)
   (haskell-mode . turn-on-haskell-indentation))
 
-;; Lisp mode
 
+;; Lisp mode
 (use-package paredit
-  :ensure t
   :diminish
   :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
   :bind (:map paredit-mode-map
@@ -644,37 +634,36 @@ If all failed, try to complete the common part with `company-complete-common'"
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
-;; Rust mode
 
-(use-package rust-mode :ensure t)
+;; Rust mode
+(use-package rust-mode)
+
 
 ;; Markdown support
-
 (use-package markdown-mode
-  :ensure t
   :mode (("\\.md\\.html\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode)))
 
-;; Support Yaml files
 
+;; Support Yaml files
 (use-package yaml-mode
-  :ensure t
   :hook (yaml-mode . goto-address-prog-mode))
 
-;; Support for the Nix package manager
 
-(use-package nix-mode :ensure t)
+;; Support for the Nix package manager
+(use-package nix-mode)
 (use-package nixpkgs-fmt :after (nix-mode))
 
-;;Support MSCL mode
 
-(use-package mscl-mode :mode "\\.pwx?macro\\'")
+;;Support MSCL mode
+(use-package mscl-mode
+  :ensure nil
+  :mode "\\.pwx?macro\\'")
 
 
 ;;; LSP
 
 (use-package eglot
-  :ensure t
   :bind (:map eglot-mode-map
               ("C-c l a" . 'eglot-code-actions)
               ("C-c l r" . 'eglot-rename)
@@ -688,7 +677,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Configuration for quickrun
 
 (use-package quickrun
-  :ensure t
   :bind (("<f5>" . quickrun)
          ("C-<f5>" . quickrun-shell))
   :config
@@ -703,6 +691,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Org configurations
 
 (use-package org
+  :ensure nil  
   :bind (("C-c a" . org-agenda)
          ("C-c x" . org-capture)
          :map org-mode-map
@@ -742,7 +731,6 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 ;; Writing mode similar to the famous Writeroom editor for OS X
 (use-package writeroom-mode
-  :ensure t
   :hook (org-mode . prose-mode)
   :config
   (define-minor-mode prose-mode
@@ -786,10 +774,8 @@ typical word processor."
 
 
 ;; Roam
-
 (when (and (executable-find "sqlite3") (executable-find "cc"))
   (use-package org-roam
-    :ensure t
     :diminish
     :hook (after-init . org-roam-db-autosync-enable)
     :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -820,13 +806,11 @@ typical word processor."
 
 (use-package osx-dictionary
   :if *is-a-mac*
-  :ensure t
   :bind (("C-c t i" . osx-dictionary-search-input)
          ("C-c t x" . osx-dictionary-search-pointer)))
 
 
 (use-package fanyi
-  :ensure t
   :bind (("C-c t f" . fanyi-dwim)
          ("C-c t d" . fanyi-dwim2))
   :config
@@ -842,6 +826,7 @@ typical word processor."
 
 (use-package flyspell
   :diminish
+  :ensure nil
   :if (and (executable-find "aspell") *spell-check-support-enabled*)
   ;; Add spell-checking in comments for all programming language modes
   :hook ((prog-mode . flyspell-prog-mode)
@@ -856,7 +841,6 @@ typical word processor."
   :config
   ;; Correcting words with flyspell via completing-read
   (use-package flyspell-correct
-    :ensure t
     :after flyspell
     :bind (:map flyspell-mode-map ("C-," . flyspell-correct-wrapper))))
 
@@ -913,6 +897,7 @@ typical word processor."
 ;;; Allow access from emacsclient
 
 (use-package server
+  :ensure nil
   :config
   (unless (server-running-p)
     (server-start)))
@@ -925,4 +910,5 @@ typical word processor."
 
 
 (provide 'init)
+
 ;;; init.el ends here
