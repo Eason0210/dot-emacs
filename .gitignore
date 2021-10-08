@@ -52,3 +52,4 @@ site-lisp/package/
 /server
 /devdocs
 .last-package-update-day
+flycheck_init.el
