@@ -186,7 +186,6 @@
 ;;; Minibuffer config
 
 (use-package vertico
-  :demand t
   :init
   (vertico-mode))
 
@@ -365,12 +364,8 @@ If all failed, try to complete the common part with `company-complete-common'"
           (when-let (project (project-current))
             (car (project-roots project))))))
 
-(use-package marginalia
-  :demand t
-  :config
-  (marginalia-mode 1)
-  (setq marginalia-annotators '(marginalia-annotators-heavy
-                                marginalia-annotators-light)))
+(use-package marginalia :init (marginalia-mode))
+
 
 ;;; Editing utils
 
