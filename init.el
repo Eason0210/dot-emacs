@@ -138,14 +138,13 @@
 
 
 (use-package dimmer
-  :init
-  (defun sanityinc/display-non-graphic-p ()
-    (not (display-graphic-p)))
-  (setq-default dimmer-fraction 0.15)
+  :custom
+  (dimmer-fraction 0.15)
   :config
-  (advice-add 'frame-set-background-mode :after (lambda (&rest args)
-						  (dimmer-process-all)))
-  (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p))
+  (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))
+  (defun aqua/display-non-graphic-p ()
+    (not (display-graphic-p)))
+  (add-to-list 'dimmer-exclusion-predicates 'aqua/display-non-graphic-p))
 
 
 ;;; Configure FlyCheck global behavior
