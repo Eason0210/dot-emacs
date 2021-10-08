@@ -25,7 +25,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 
 (let ((minver "26.2"))
   (when (version< emacs-version minver)
@@ -656,7 +656,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 ;; Support for the Nix package manager
 (use-package nix-mode)
-(use-package nixpkgs-fmt :after (nix-mode))
+(use-package nixpkgs-fmt :after nix-mode)
 
 
 ;;Support MSCL mode
