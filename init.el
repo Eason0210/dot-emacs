@@ -852,7 +852,7 @@ typical word processor."
    ((eq system-type 'darwin)
     '(("SF Mono" . 130) ("Monaco" . 130) ("Menlo" . 130)))
    ((eq system-type 'windows-nt)
-    '(("SF Mono" . 120) ("Consolas" . 140) ("Cascadia Mono" . 125)))
+    '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110)))
    (t
     '(("SF Mono" . 190) ("Consolas" . 200) ("Cascadia Mono" . 190))))
   "List of fonts and sizes.  The first one available will be used.")
@@ -885,7 +885,7 @@ typical word processor."
 (when (display-graphic-p)
   (change-font)
 
-  (dolist (font '("Segoe UI Symbol" "Apple Color Emoji" "Symbola" "Symbol"))
+  (dolist (font '("Segoe UI Symbol" "Apple Color Emoji" "Noto Color Emoji"))
     (if (font-installed-p font)
         (set-fontset-font t 'unicode font nil 'prepend)))
 
