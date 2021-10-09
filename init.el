@@ -673,7 +673,7 @@ Call a second time to restore the original window configuration."
 (use-package haskell-mode
   :hook
   (haskell-mode . interactive-haskell-mode)
-  (haskell-mode . turn-on-haskell-indentation))
+  (haskell-mode . haskell-indentation-mode))
 
 
 ;; Lisp mode
