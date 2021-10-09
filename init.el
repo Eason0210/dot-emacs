@@ -296,7 +296,7 @@ If all failed, try to complete the common part with `company-complete-common'"
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ("M-g f" . consult-flycheck)               ;; Alternative: consult-flymake
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
@@ -744,9 +744,14 @@ Call a second time to restore the original window configuration."
               ("C-c l r" . 'eglot-rename)
               ("C-c l f" . 'eglot-format)
               ("C-c l d" . 'eldoc))
+  :hook (eglot-managed-mode . (lambda () (flymake-mode -1)))
   :config
   (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
-  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+
+  (setq read-process-output-max (* 1024 1024))
+  (push :documentHighlightProvider eglot-ignored-server-capabilites)
+  (setq eldoc-echo-area-use-multiline-p nil))
 
 
 ;;; Configuration for quickrun
