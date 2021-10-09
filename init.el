@@ -680,6 +680,15 @@ Call a second time to restore the original window configuration."
     (cursor-chg-mode 1)))
 
 
+;;; Helpers for M-x compile
+
+(use-package compile
+  :ensure nil
+  :bind ([f6] . recompile)
+  :config
+  (setq-default compilation-scroll-output t))
+
+
 ;;; Programming languages support
 
 ;; C/C++ Mode
