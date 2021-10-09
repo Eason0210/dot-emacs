@@ -760,7 +760,11 @@ there is no current file, eval the current buffer."
   ;;respawn the scratch buffer when it's killed
   (use-package immortal-scratch
     :after lisp-mode
-    :hook (after-init . immortal-scratch-mode)))
+    :hook (after-init . immortal-scratch-mode))
+
+  ;; Extras for theme editing
+  (use-package highlight-quoted
+    :hook (emacs-lisp-mode . highlight-quoted-mode)))
 
 
 ;; Rust mode
