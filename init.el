@@ -778,6 +778,12 @@ there is no current file, eval the current buffer."
 (use-package macrostep
   :bind ("C-c e m" . macrostep-expand))
 
+(use-package flycheck-package
+  :after (flycheck elisp-mode)
+  :config
+  (flycheck-package-setup))
+
+
 ;; Enable desired features for all lisp modes
 
 (defun set-up-hippie-expand-for-elisp ()
