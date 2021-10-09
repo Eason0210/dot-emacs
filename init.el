@@ -139,9 +139,9 @@
   :config
   (setq-default dimmer-fraction 0.15)
   (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))
-  (defun aqua/display-non-graphic-p ()
+  (defun sanityinc/display-non-graphic-p ()
     (not (display-graphic-p)))
-  (add-to-list 'dimmer-exclusion-predicates 'aqua/display-non-graphic-p))
+  (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p))
 
 
 ;;; Configure FlyCheck global behavior
@@ -187,9 +187,9 @@
 
 (use-package orderless
   :init
-  (defun aqua/use-orderless-in-minibuffer ()
+  (defun sanityinc/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless)))
-  (add-hook 'minibuffer-setup-hook 'aqua/use-orderless-in-minibuffer)
+  (add-hook 'minibuffer-setup-hook 'sanityinc/use-orderless-in-minibuffer)
 
   (setq completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
@@ -567,21 +567,21 @@ If all failed, try to complete the common part with `company-complete-common'"
 (global-set-key (kbd "C-x _") 'split-window-vertically-instead)
 
 ;; Borrowed from http://postmomentum.ch/blog/201304/blog-on-emacs
-(defun aqua/split-window()
+(defun sanityinc/split-window()
   "Split the window to see the most recent buffer in the other window.
 Call a second time to restore the original window configuration."
   (interactive)
-  (if (eq last-command 'aqua/split-window)
+  (if (eq last-command 'sanityinc/split-window)
       (progn
-        (jump-to-register :aqua/split-window)
-        (setq this-command 'aqua/unsplit-window))
-    (window-configuration-to-register :aqua/split-window)
+        (jump-to-register :sanityinc/split-window)
+        (setq this-command 'sanityinc/unsplit-window))
+    (window-configuration-to-register :sanityinc/split-window)
     (switch-to-buffer-other-window nil)))
 
-(global-set-key (kbd "<f7>") 'aqua/split-window)
+(global-set-key (kbd "<f7>") 'sanityinc/split-window)
 
 ;; Toggle to dedicated window
-(defun aqua/toggle-current-window-dedication ()
+(defun sanityinc/toggle-current-window-dedication ()
   "Toggle whether the current window is dedicated to its current buffer."
   (interactive)
   (let* ((window (selected-window))
@@ -591,7 +591,7 @@ Call a second time to restore the original window configuration."
              (if was-dedicated "no longer " "")
              (buffer-name))))
 
-(global-set-key (kbd "C-c <down>") 'aqua/toggle-current-window-dedication)
+(global-set-key (kbd "C-c <down>") 'sanityinc/toggle-current-window-dedication)
 
 ;;; Miscellaneous config
 
@@ -709,33 +709,33 @@ Call a second time to restore the original window configuration."
   :ensure nil
   :bind (([remap eval-expression] . pp-eval-expression)
          :map emacs-lisp-mode-map
-         ("C-x C-e" . aqua/eval-last-sexp-or-region)
+         ("C-x C-e" . sanityinc/eval-last-sexp-or-region)
          ("C-c C-e" . pp-eval-expression)
-         ("C-c C-l" . aqua/load-this-file))
+         ("C-c C-l" . sanityinc/load-this-file))
   :hook ((emacs-lisp-mode . (lambda () (setq mode-name "ELisp")))
-         (emacs-lisp-mode . aqua/maybe-set-bundled-elisp-readonly))
+         (emacs-lisp-mode . sanityinc/maybe-set-bundled-elisp-readonly))
   :config
   (setq-default debugger-bury-or-kill 'kill)
   (setq-default initial-scratch-message
-              (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
+                (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
   ;; Make C-x C-e run 'eval-region if the region is active
-  (defun aqua/eval-last-sexp-or-region (prefix)
+  (defun sanityinc/eval-last-sexp-or-region (prefix)
     "Eval region from BEG to END if active, otherwise the last sexp."
     (interactive "P")
     (if (and (mark) (use-region-p))
         (eval-region (min (point) (mark)) (max (point) (mark)))
       (pp-eval-last-sexp prefix)))
 
-  (defun aqua/make-read-only (expression out-buffer-name)
-  "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
-  (when (get-buffer out-buffer-name)
-    (with-current-buffer out-buffer-name
-      (view-mode 1))))
-  (advice-add 'pp-display-expression :after 'aqua/make-read-only)
+  (defun sanityinc/make-read-only (expression out-buffer-name)
+    "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
+    (when (get-buffer out-buffer-name)
+      (with-current-buffer out-buffer-name
+        (view-mode 1))))
+  (advice-add 'pp-display-expression :after 'sanityinc/make-read-only)
 
   ;; C-c C-l to load buffer or file
-  (defun aqua/load-this-file ()
+  (defun sanityinc/load-this-file ()
     "Load the current file or buffer.
 The current directory is temporarily added to `load-path'.  When
 there is no current file, eval the current buffer."
@@ -750,12 +750,12 @@ there is no current file, eval the current buffer."
         (eval-buffer)
         (message "Evaluated %s" (current-buffer)))))
 
-  (defun aqua/maybe-set-bundled-elisp-readonly ()
-  "If this elisp appears to be part of Emacs, then disallow editing."
-  (when (and (buffer-file-name)
-             (string-match-p "\\.el\\.gz\\'" (buffer-file-name)))
-    (setq buffer-read-only t)
-    (view-mode 1)))
+  (defun sanityinc/maybe-set-bundled-elisp-readonly ()
+    "If this elisp appears to be part of Emacs, then disallow editing."
+    (when (and (buffer-file-name)
+               (string-match-p "\\.el\\.gz\\'" (buffer-file-name)))
+      (setq buffer-read-only t)
+      (view-mode 1)))
 
   ;;respawn the scratch buffer when it's killed
   (use-package immortal-scratch
@@ -768,10 +768,10 @@ there is no current file, eval the current buffer."
 
 (use-package rainbow-mode
   :diminish
-  :hook ((emacs-lisp-mode . aqua/enable-rainbow-mode-if-theme)
+  :hook ((emacs-lisp-mode . sanityinc/enable-rainbow-mode-if-theme)
          (help-mode . rainbow-mode))
   :config
-  (defun aqua/enable-rainbow-mode-if-theme ()
+  (defun sanityinc/enable-rainbow-mode-if-theme ()
     (when (and (buffer-file-name) (string-match-p "\\(color-theme-\\|-theme\\.el\\)" (buffer-file-name)))
       (rainbow-mode))))
 
