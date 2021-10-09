@@ -474,6 +474,18 @@ If all failed, try to complete the common part with `company-complete-common'"
     (setq-default undo-tree-visualizer-diff t)))
 
 
+;;; Whitespace
+
+(defun sanityinc/show-trailing-whitespace ()
+  "Enable display of trailing whitespace in this buffer."
+  (setq-local show-trailing-whitespace t))
+
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook 'sanityinc/show-trailing-whitespace))
+
+(global-set-key [remap just-one-space] 'cycle-spacing)
+
+
 ;;; GUI frames
 
 ;; Suppress GUI features
