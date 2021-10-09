@@ -680,8 +680,20 @@ Call a second time to restore the original window configuration."
   :after (haskell-mode flycheck)
   :hook (haskell-mode . dante-mode)
   :config
-  (flycheck-add-next-checker 'haskell-dante
-                             '(warning . haskell-hlint)))
+  (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
+
+(use-package reformatter
+  :config
+  (reformatter-define hindent
+    :program "hindent"
+    :lighter " Hin")
+
+  (defalias 'hindent-mode 'hindent-on-save-mode)
+
+  (reformatter-define ormolu
+    :program "ormolu"
+    :lighter " Orm"))
+
 
 ;; Lisp mode
 (use-package paredit
