@@ -486,11 +486,10 @@ If all failed, try to complete the common part with `company-complete-common'"
 (let ((no-border '(internal-border-width . 0)))
   (add-to-list 'default-frame-alist no-border)
   (add-to-list 'initial-frame-alist no-border))
-
-(use-package ns-auto-titlebar
-  :if *is-a-mac*
-  :config
-  (ns-auto-titlebar-mode 1))
+(when *is-a-mac*
+  (use-package ns-auto-titlebar
+    :config
+    (ns-auto-titlebar-mode 1)))
 
 
 ;;; Version control
@@ -807,12 +806,10 @@ typical word processor."
 
 
 ;;; Dictionaries
-
-(use-package osx-dictionary
-  :if *is-a-mac*
-  :bind (("C-c t i" . osx-dictionary-search-input)
-         ("C-c t x" . osx-dictionary-search-pointer)))
-
+(when *is-a-mac*
+  (use-package osx-dictionary
+    :bind (("C-c t i" . osx-dictionary-search-input)
+           ("C-c t x" . osx-dictionary-search-pointer))))
 
 (use-package fanyi
   :bind (("C-c t f" . fanyi-dwim)
