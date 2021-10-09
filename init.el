@@ -783,6 +783,11 @@ there is no current file, eval the current buffer."
   :config
   (flycheck-package-setup))
 
+(use-package ert
+  :ensure nil
+  :bind (:map ert-results-mode-map
+              ("g" . ert-results-rerun-all-tests)))
+
 
 ;; Enable desired features for all lisp modes
 
