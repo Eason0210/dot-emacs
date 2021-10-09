@@ -137,6 +137,7 @@
 
 
 (use-package dimmer
+  :hook (after-init . dimmer-mode)
   :config
   (setq-default dimmer-fraction 0.15)
   (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))
