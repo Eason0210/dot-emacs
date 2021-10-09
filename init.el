@@ -697,7 +697,7 @@ Call a second time to restore the original window configuration."
 
 ;; Lisp mode
 (use-package paredit
-  :diminish
+  :diminish paredit-mode " Par"
   :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
   :bind (:map paredit-mode-map
               ("[")
