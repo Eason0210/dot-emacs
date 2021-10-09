@@ -363,6 +363,20 @@ If all failed, try to complete the common part with `company-complete-common'"
 (use-package marginalia :init (marginalia-mode))
 
 
+;;; Settings for hippie-expand
+
+(use-package hippie-exp
+  :ensure nil
+  :bind ("M-/" . hippie-expand)
+  :config
+  (setq hippie-expand-try-functions-list
+        '(try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-dabbrev
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill)))
+
+
 ;;; Editing utils
 
 (when (fboundp 'electric-pair-mode)
