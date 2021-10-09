@@ -778,15 +778,18 @@ there is no current file, eval the current buffer."
 (use-package macrostep
   :bind ("C-c e m" . macrostep-expand))
 
+(use-package ert
+  :ensure nil
+  :bind (:map ert-results-mode-map
+              ("g" . ert-results-rerun-all-tests)))
+
 (use-package flycheck-package
   :after (flycheck elisp-mode)
   :config
   (flycheck-package-setup))
 
-(use-package ert
-  :ensure nil
-  :bind (:map ert-results-mode-map
-              ("g" . ert-results-rerun-all-tests)))
+(use-package flycheck-relint
+  :after (flycheck elisp-mode))
 
 
 ;; Enable desired features for all lisp modes
