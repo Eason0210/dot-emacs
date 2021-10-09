@@ -175,7 +175,7 @@
 ;;; Show line number
 
 (use-package display-line-numbers
-  :ensure nil  
+  :ensure nil
   :hook (prog-mode . display-line-numbers-mode)
   :config
   (setq-default display-line-numbers-width 3))
@@ -198,13 +198,13 @@
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
-  :ensure nil  
+  :ensure nil
   :init
   (savehist-mode))
 
 ;; A few more useful configurations...
 (use-package emacs
-  :ensure nil  
+  :ensure nil
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; Alternatively try `consult-completing-read-multiple'.
@@ -395,7 +395,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 
 (use-package autorevert
-  :ensure nil  
+  :ensure nil
   :diminish
   :hook (after-init . global-auto-revert-mode)
   :config
@@ -510,7 +510,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Settings for tracking recent files
 
 (use-package recentf
-  :ensure nil  
+  :ensure nil
   :hook (after-init . recentf-mode)
   :config
   (setq-default
@@ -520,7 +520,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Ibuffer settings
 
 (use-package ibuffer
-  :ensure nil  
+  :ensure nil
   :bind ("C-x C-b" . ibuffer))
 
 
@@ -533,7 +533,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 
 ;; Auto save
 (use-package auto-save
-  :ensure nil  
+  :ensure nil
   :config
   (setq auto-save-silent t)
   (setq auto-save-idle 1.5)
@@ -695,7 +695,7 @@ If all failed, try to complete the common part with `company-complete-common'"
 ;;; Org configurations
 
 (use-package org
-  :ensure nil  
+  :ensure nil
   :bind (("C-c a" . org-agenda)
          ("C-c x" . org-capture)
          :map org-mode-map
