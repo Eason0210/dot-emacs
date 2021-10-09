@@ -673,8 +673,15 @@ Call a second time to restore the original window configuration."
 (use-package haskell-mode
   :hook
   (haskell-mode . interactive-haskell-mode)
-  (haskell-mode . haskell-indentation-mode))
+  (haskell-mode . haskell-indentation-mode)
+  (haskell-mode . haskell-auto-insert-module-template))
 
+(use-package dante
+  :after (haskell-mode flycheck)
+  :hook (haskell-mode . dante-mode)
+  :config
+  (flycheck-add-next-checker 'haskell-dante
+                             '(warning . haskell-hlint)))
 
 ;; Lisp mode
 (use-package paredit
