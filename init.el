@@ -766,6 +766,15 @@ there is no current file, eval the current buffer."
   (use-package highlight-quoted
     :hook (emacs-lisp-mode . highlight-quoted-mode)))
 
+(use-package rainbow-mode
+  :diminish
+  :hook ((emacs-lisp-mode . aqua/enable-rainbow-mode-if-theme)
+         (help-mode . rainbow-mode))
+  :config
+  (defun aqua/enable-rainbow-mode-if-theme ()
+    (when (and (buffer-file-name) (string-match-p "\\(color-theme-\\|-theme\\.el\\)" (buffer-file-name)))
+      (rainbow-mode))))
+
 
 ;; Rust mode
 (use-package rust-mode
