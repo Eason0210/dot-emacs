@@ -93,8 +93,6 @@
 ;;; Scratch
 
 (use-package scratch)
-(setq-default initial-scratch-message
-              (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
 ;;; Osx-key
 
@@ -703,6 +701,66 @@ Call a second time to restore the original window configuration."
   (require 'eldoc)
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
+
+
+;; Make C-x C-e run 'eval-region if the region is active
+
+(use-package lisp-mode
+  :ensure nil
+  :bind (([remap eval-expression] . pp-eval-expression)
+         :map emacs-lisp-mode-map
+         ("C-x C-e" . aqua/eval-last-sexp-or-region)
+         ("C-c C-e" . pp-eval-expression)
+         ("C-c C-l" . aqua/load-this-file))
+  :hook ((emacs-lisp-mode . (lambda () (setq mode-name "ELisp")))
+         (emacs-lisp-mode . aqua/maybe-set-bundled-elisp-readonly))
+  :config
+  (setq-default debugger-bury-or-kill 'kill)
+  (setq-default initial-scratch-message
+              (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
+
+  ;; Make C-x C-e run 'eval-region if the region is active
+  (defun aqua/eval-last-sexp-or-region (prefix)
+    "Eval region from BEG to END if active, otherwise the last sexp."
+    (interactive "P")
+    (if (and (mark) (use-region-p))
+        (eval-region (min (point) (mark)) (max (point) (mark)))
+      (pp-eval-last-sexp prefix)))
+
+  (defun aqua/make-read-only (expression out-buffer-name)
+  "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
+  (when (get-buffer out-buffer-name)
+    (with-current-buffer out-buffer-name
+      (view-mode 1))))
+  (advice-add 'pp-display-expression :after 'aqua/make-read-only)
+
+  ;; C-c C-l to load buffer or file
+  (defun aqua/load-this-file ()
+    "Load the current file or buffer.
+The current directory is temporarily added to `load-path'.  When
+there is no current file, eval the current buffer."
+    (interactive)
+    (let ((load-path (cons default-directory load-path))
+          (file (buffer-file-name)))
+      (if file
+          (progn
+            (save-some-buffers nil (apply-partially 'derived-mode-p 'emacs-lisp-mode))
+            (load-file (buffer-file-name))
+            (message "Loaded %s" file))
+        (eval-buffer)
+        (message "Evaluated %s" (current-buffer)))))
+
+  (defun aqua/maybe-set-bundled-elisp-readonly ()
+  "If this elisp appears to be part of Emacs, then disallow editing."
+  (when (and (buffer-file-name)
+             (string-match-p "\\.el\\.gz\\'" (buffer-file-name)))
+    (setq buffer-read-only t)
+    (view-mode 1)))
+
+  ;;respawn the scratch buffer when it's killed
+  (use-package immortal-scratch
+    :after lisp-mode
+    :hook (after-init . immortal-scratch-mode)))
 
 
 ;; Rust mode
