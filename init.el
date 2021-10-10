@@ -452,6 +452,13 @@ If all failed, try to complete the common part with `company-complete-common'"
          ([M-up] . move-dup-move-lines-up)
          ([M-down] . move-dup-move-lines-down)))
 
+;; Multiple cursors
+(use-package multiple-cursors
+  :bind (("C-<" . mc/mark-previous-like-this)
+         ("C->" . mc/mark-next-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+
 ;; Display available keybindings
 (use-package which-key
   :diminish
