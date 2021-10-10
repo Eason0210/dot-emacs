@@ -89,6 +89,16 @@
 (use-package bind-key
   :bind ("C-h y" . describe-personal-keybindings))
 
+;;; Elisp helper functions and commands
+
+;; Like diminish, but for major modes
+(defun sanityinc/set-major-mode-name (name)
+  "Override the major mode NAME in this buffer."
+  (setq-local mode-name name))
+
+(defun sanityinc/major-mode-lighter (mode name)
+  (add-hook (derived-mode-hook-name mode)
+            (apply-partially 'sanityinc/set-major-mode-name name)))
 
 ;;; Scratch
 
@@ -711,9 +721,15 @@ Call a second time to restore the original window configuration."
 ;; JavaScript
 (use-package js2-mode
   :mode "\\.js\\'"
+  :init
+  (setq-default js-indent-level 2)
   :config
   (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
-  (flycheck-add-mode 'javascript-eslint 'js2-mode))
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (with-eval-after-load 'js2-mode
+    (sanityinc/major-mode-lighter 'js2-mode "JS2")
+    (sanityinc/major-mode-lighter 'js2-jsx-mode "JSX2")))
+
 
 ;; JSON mode
 (use-package json-mode
