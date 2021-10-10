@@ -926,6 +926,7 @@ there is no current file, eval the current buffer."
 
 ;; Support Yaml files
 (use-package yaml-mode
+  :mode "\\.ya?ml\\'"
   :hook (yaml-mode . goto-address-prog-mode))
 
 
