@@ -1033,6 +1033,7 @@ there is no current file, eval the current buffer."
 
 ;; Basic support for programming in J
 (use-package j-mode
+  :defer t
   :hook (inferior-j-mode . (lambda () (electric-pair-mode -1)))
   :config
   (setq-default j-console-cmd "jconsole"))
