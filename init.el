@@ -985,7 +985,8 @@ there is no current file, eval the current buffer."
   :bind (("C-c a" . org-agenda)
          ("C-c x" . org-capture)
          :map org-mode-map
-         ("C-c i a" . org-id-get-create))
+         ("C-c i a" . org-id-get-create)
+         ("C-c e d" . org-export-docx))
   :config
   ;; To speed up startup, don't put to init section
   (setq org-hide-emphasis-markers t)
@@ -1006,6 +1007,7 @@ there is no current file, eval the current buffer."
      (sql . t)
      (sqlite . t)))
 
+  :preface
   ;; Export to docx
   (defun org-export-docx ()
     (interactive)
