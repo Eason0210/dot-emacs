@@ -1019,23 +1019,25 @@ there is no current file, eval the current buffer."
 (add-to-list 'auto-mode-alist '("archive-contents\\'" . emacs-lisp-mode))
 
 
-
 ;; Rust mode
 (use-package rust-mode
   :mode "\\.rs\\'")
 
+;; Basic support for programming in J
+(use-package j-mode
+  :hook (inferior-j-mode . (lambda () (electric-pair-mode -1)))
+  :config
+  (setq-default j-console-cmd "jconsole"))
 
 ;; Markdown support
 (use-package markdown-mode
   :mode (("\\.md\\.html\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode)))
 
-
 ;; Support Yaml files
 (use-package yaml-mode
   :mode "\\.ya?ml\\'"
   :hook (yaml-mode . goto-address-prog-mode))
-
 
 ;; Support for the Nix package manager
 (use-package nix-mode
@@ -1045,7 +1047,6 @@ there is no current file, eval the current buffer."
   :after nix-mode
   :bind (:map nix-mode-map
               ("C-c C-f" . nixpkgs-fmt)))
-
 
 ;;Support MSCL mode
 (use-package mscl-mode
