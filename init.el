@@ -255,10 +255,11 @@
         ("TAB" . smarter-tab-to-complete)
         ("<tab>" . smarter-tab-to-complete))
   :hook (after-init . global-company-mode)
-  :config
+  :preface
   (defun smarter-tab-to-complete ()
-    "Try to `org-cycle', `yas-expand', and `yas-next-field' at current cursor position.
-If all failed, try to complete the common part with `company-complete-common'"
+    "Try to `org-cycle', `yas-expand', and `yas-next-field' at current
+ cursor position. If all failed, try to complete the common part with
+ `company-complete-common'"
     (interactive)
     (when yas-minor-mode
       (let ((old-point (point))
@@ -643,16 +644,13 @@ Call a second time to restore the original window configuration."
   (auto-save-enable))
 
 ;; Rime
-(defconst rime-usr-data-exists-p
-  (file-exists-p "~/emacs-data/rime")
-  "Checking if there is a rime user data.")
 
 (use-package rime
   :if rime-usr-data-exists-p
   :bind (("C-\\" . toggle-input-method)
-         ("C-`" . rime-send-keybinding))
+         ("C-`" . rime-send-keybinding)
+         ([f8] . rime-toggle-show-candidate))
   :init
-
   (setq
    rime-inline-predicates '(rime-predicate-space-after-cc-p
                             rime-predicate-current-uppercase-letter-p)
@@ -665,27 +663,30 @@ Call a second time to restore the original window configuration."
    window-min-height 1
    rime-user-data-dir "~/emacs-data/rime"
    rime-title "")
-
   (when (eq system-type 'windows-nt)
     (setq rime-share-data-dir
           "~/scoop/apps/msys2/current/mingw64/share/rime-data"))
   (when *is-a-mac*
     (setq rime-librime-root  "~/emacs-data/librime/dist")
     (setq rime-emacs-module-header-root "~/.nix-profile/include"))
-
+  :config
+  ;; change cursor color automatically
+  (use-package im-cursor-chg
+    :ensure nil
+    :after rime
+    :config
+    (cursor-chg-mode 1))
+  :preface
+  (defconst rime-usr-data-exists-p
+    (file-exists-p "~/emacs-data/rime")
+    "Checking if there is a rime user data.")
+  
   (defun rime-toggle-show-candidate ()
     "Use minibuffer for candidate if current is nil."
     (interactive)
     (if (equal rime-show-candidate nil)
         (setq rime-show-candidate 'minibuffer)
-      (setq rime-show-candidate nil)))
-
-  ;; change cursor color automatically
-  (use-package im-cursor-chg
-    :ensure nil
-    :after (rime)
-    :config
-    (cursor-chg-mode 1)))
+      (setq rime-show-candidate nil))))
 
 
 ;;; Helpers for M-x compile
