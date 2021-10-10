@@ -971,6 +971,7 @@ there is no current file, eval the current buffer."
   (flycheck-package-setup))
 
 (use-package flycheck-relint
+  :defer t
   :after (flycheck elisp-mode))
 
 
