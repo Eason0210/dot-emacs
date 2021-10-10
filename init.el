@@ -1024,7 +1024,7 @@ there is no current file, eval the current buffer."
 ;; Writing mode similar to the famous Writeroom editor for OS X
 (use-package writeroom-mode
   :hook (org-mode . prose-mode)
-  :config
+  :preface
   (define-minor-mode prose-mode
     "Set up a buffer for prose editing.
 This enables or modifies a number of settings so that the
