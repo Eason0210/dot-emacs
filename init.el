@@ -129,7 +129,7 @@
 
 ;;; Scratch
 
-(use-package scratch)
+(use-package scratch :defer t)
 
 ;;; Osx-key
 
@@ -1066,6 +1066,7 @@ there is no current file, eval the current buffer."
 ;;; LSP
 
 (use-package eglot
+  :defer t
   :bind (:map eglot-mode-map
               ("C-c l a" . 'eglot-code-actions)
               ("C-c l r" . 'eglot-rename)
