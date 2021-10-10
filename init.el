@@ -738,6 +738,13 @@ Call a second time to restore the original window configuration."
     :program "ormolu"
     :lighter " Orm"))
 
+;; JavaScript
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :config
+  (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
 ;; Lisp mode
 (use-package paredit
