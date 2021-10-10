@@ -746,6 +746,16 @@ Call a second time to restore the original window configuration."
   (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
   (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
+(use-package json-mode
+  :mode "\\.json\\'")
+
+(use-package json-reformat
+  :after json-mode)
+
+(use-package json-snatcher
+  :after json-mode)
+
+
 ;; Lisp mode
 (use-package paredit
   :diminish paredit-mode " Par"
