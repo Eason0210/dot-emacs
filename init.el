@@ -141,6 +141,7 @@
 
 (use-package color-theme-sanityinc-tomorrow
   :hook (after-init . reapply-themes)
+  :bind ("C-c t b" . sanityinc-tomorrow-themes-toggle)
   :custom
   ;; Don't prompt to confirm theme safety. This avoids problems with
   ;; first-time startup on Emacs > 26.3.
@@ -167,7 +168,14 @@
     "Activate a dark color theme."
     (interactive)
     (setq custom-enabled-themes '(sanityinc-tomorrow-bright))
-    (reapply-themes)))
+    (reapply-themes))
+
+  (defun sanityinc-tomorrow-themes-toggle ()
+    "Toggle between `sanityinc-tomorrow-bright' and `sanityinc-tomorrow-day'."
+    (interactive)
+    (if (eq (car custom-enabled-themes) 'sanityinc-tomorrow-bright)
+        (light)
+      (dark))))
 
 
 (use-package dimmer
