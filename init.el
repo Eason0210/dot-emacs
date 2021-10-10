@@ -931,7 +931,8 @@ there is no current file, eval the current buffer."
 
 
 ;; Support for the Nix package manager
-(use-package nix-mode :mode "\\.nix\\'")
+(use-package nix-mode
+  :mode "\\.nix\\'")
 
 (use-package nixpkgs-fmt
   :after nix-mode
