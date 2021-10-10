@@ -780,6 +780,10 @@ Call a second time to restore the original window configuration."
   (setq-default initial-scratch-message
                 (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
+  ;; Load .el if newer than corresponding .elc
+
+  (setq load-prefer-newer t)
+
   ;; Make C-x C-e run 'eval-region if the region is active
   (defun sanityinc/eval-last-sexp-or-region (prefix)
     "Eval region from BEG to END if active, otherwise the last sexp."
