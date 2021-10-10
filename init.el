@@ -837,7 +837,7 @@ there is no current file, eval the current buffer."
   :diminish
   :hook ((emacs-lisp-mode . sanityinc/enable-rainbow-mode-if-theme)
          (help-mode . rainbow-mode))
-  :config
+  :preface
   (defun sanityinc/enable-rainbow-mode-if-theme ()
     (when (and (buffer-file-name) (string-match-p "\\(color-theme-\\|-theme\\.el\\)" (buffer-file-name)))
       (rainbow-mode))))
