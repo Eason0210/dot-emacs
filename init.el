@@ -103,7 +103,14 @@
 ;;; Themes
 
 (use-package color-theme-sanityinc-tomorrow
-  :init
+  :hook (after-init . reapply-themes)
+  :config
+  ;; Don't prompt to confirm theme safety. This avoids problems with
+  ;; first-time startup on Emacs > 26.3.
+  (setq custom-safe-themes t)
+  ;; If you don't customize it, this is the theme you get.
+  (setq-default custom-enabled-themes '(sanityinc-tomorrow-bright))
+  :preface
   ;; Ensure that themes will be applied even if they have not been customized
   (defun reapply-themes ()
     "Forcibly load the themes listed in `custom-enabled-themes'."
@@ -123,25 +130,18 @@
     "Activate a dark color theme."
     (interactive)
     (setq custom-enabled-themes '(sanityinc-tomorrow-bright))
-    (reapply-themes))
-
-  :config
-  ;; Don't prompt to confirm theme safety. This avoids problems with
-  ;; first-time startup on Emacs > 26.3.
-  (setq custom-safe-themes t)
-  ;; If you don't customize it, this is the theme you get.
-  (setq-default custom-enabled-themes '(sanityinc-tomorrow-bright))
-  (add-hook 'after-init-hook 'reapply-themes))
+    (reapply-themes)))
 
 
 (use-package dimmer
   :hook (after-init . dimmer-mode)
   :config
   (setq-default dimmer-fraction 0.15)
-  (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))
+  (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))  
+  (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p)
+  :preface
   (defun sanityinc/display-non-graphic-p ()
-    (not (display-graphic-p)))
-  (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p))
+    (not (display-graphic-p))))
 
 
 ;;; Configure FlyCheck global behavior
@@ -186,13 +186,13 @@
   (vertico-mode))
 
 (use-package orderless
-  :init
-  (defun sanityinc/use-orderless-in-minibuffer ()
-    (setq-local completion-styles '(substring orderless)))
-  (add-hook 'minibuffer-setup-hook 'sanityinc/use-orderless-in-minibuffer)
-
+  :hook (minibuffer-setup . sanityinc/use-orderless-in-minibuffer)
+  :config
   (setq completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles partial-completion))))
+  :preface
+  (defun sanityinc/use-orderless-in-minibuffer ()
+    (setq-local completion-styles '(substring orderless))))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -236,6 +236,7 @@
          ([(tab)] . smarter-yas-expand-next-field)))
   :config
   (yas-reload-all)
+  :preface
   (defun smarter-yas-expand-next-field ()
     "Try to `yas-expand' then `yas-next-field' at current cursor position."
     (interactive)
