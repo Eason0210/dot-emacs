@@ -53,10 +53,17 @@
 
 ;;; package.el & use-package setup
 
+;; Install into separate package dirs for each Emacs version, to prevent bytecode incompatibility
+(setq package-user-dir
+      (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
+                        user-emacs-directory))
+
+;; Standard package repositories
 (setq package-archives
       '(("melpa" . "https://melpa.org/packages/")
         ("gnu" . "https://elpa.gnu.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
 (require 'package)
 (package-initialize)
 
