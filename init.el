@@ -246,12 +246,6 @@
   (defun sanityinc/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless))))
 
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(use-package savehist
-  :ensure nil
-  :init
-  (savehist-mode))
-
 ;; A few more useful configurations...
 (use-package emacs
   :ensure nil
@@ -1347,6 +1341,19 @@ typical word processor."
                  (abbreviate-file-name filename))))))
 (advice-add 'desktop-create-buffer :around 'sanityinc/desktop-time-buffer-create)
 
+;; Restore histories and registers after saving
+
+(use-package savehist
+  :ensure nil
+  :init
+  (savehist-mode))
+
+(use-package session
+  :hook (after-init . session-initialize)
+  :config
+  (setq session-save-file (locate-user-emacs-file ".session"))
+  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
+  (setq session-save-file-coding-system 'utf-8))
 
 ;; Save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also
