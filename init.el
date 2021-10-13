@@ -487,7 +487,26 @@
   :hook (after-init . global-auto-revert-mode)
   :config
   (setq global-auto-revert-non-file-buffers t
-      auto-revert-verbose nil))
+        auto-revert-verbose nil))
+
+;; Huge files
+
+(use-package so-long
+  :ensure nil
+  :hook (after-init . global-so-long-mode))
+
+(use-package vlf
+  :defer t
+  :preface
+  (defun ffap-vlf ()
+    "Find file at point with VLF."
+    (interactive)
+    (require 'ffap)
+    (let ((file (ffap-file-at-point)))
+      (unless (file-exists-p file)
+        (error "File does not exist: %s" file))
+      (vlf file))))
+
 
 ;; A simple visible bell which works in all terminal types
 (use-package mode-line-bell
