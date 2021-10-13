@@ -473,10 +473,12 @@
  mouse-yank-at-point t
  save-interprogram-paste-before-kill t
  scroll-preserve-screen-position 'always
- ;; set-mark-command-repeat-pop t
+ set-mark-command-repeat-pop t
  ;; truncate-lines nil
  truncate-partial-width-windows nil
  tooltip-delay 1.5)
+
+(bind-key "C-x x p" 'pop-to-mark-command)
 
 (add-hook 'after-init-hook 'delete-selection-mode)
 
