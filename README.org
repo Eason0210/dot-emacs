@@ -21,10 +21,10 @@ Emacs itself comes with support for many programming languages. This config adds
 The config should run on Emacs 27.1 or greater. I use Emacs master branch personally(recently is Emacs 29.0.50).
 
 ** Installation
-To install, clone this repo to ~~/.emacs.d~, i.e. ensure that the ~init.el~ contained in this repo ends up at ~~/.emacs.d/init.el~:
+To install, clone this repo to ~$HOME/.emacs.d~, i.e. ensure that the ~init.el~ contained in this repo ends up at ~$HOME/.emacs.d/init.el~:
 
 #+begin_src bash
-git clone https://github.com/eason0210/dot-emacs.git ~/.emacs.d  
+git clone https://github.com/Eason0210/dot-emacs.git ~/.emacs.d  
 #+end_src
 Upon starting up Emacs for the first time, further third-party packages will be automatically downloaded and installed.
 
