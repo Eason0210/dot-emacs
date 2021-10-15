@@ -734,7 +734,6 @@ Call a second time to restore the original window configuration."
   :ensure nil
   :config
   (setq auto-save-silent t)
-  (setq auto-save-idle 1.5)
   (auto-save-enable))
 
 ;; Rime
