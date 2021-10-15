@@ -738,6 +738,10 @@ Call a second time to restore the original window configuration."
 (add-hook 'prog-mode-hook 'goto-address-prog-mode)
 (setq goto-address-mail-face 'link)
 
+(use-package shift-number
+  :bind (("C-c +" . shift-number-up)
+         ("C-c -" . shift-number-down)))
+
 ;; Auto save
 (use-package auto-save
   :ensure nil
