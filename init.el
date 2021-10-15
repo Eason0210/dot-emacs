@@ -619,6 +619,11 @@
     :config
     (ns-auto-titlebar-mode 1)))
 
+(when (and *is-a-mac* (fboundp 'toggle-frame-fullscreen))
+  ;; Command-Option-f to toggle fullscreen mode
+  ;; Hint: Customize `ns-use-native-fullscreen'
+  (bind-key "M-ƒ" 'toggle-frame-fullscreen))
+
 (setq frame-title-format
       '((:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))
