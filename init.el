@@ -586,7 +586,7 @@
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook 'sanityinc/show-trailing-whitespace))
 
-(global-set-key [remap just-one-space] 'cycle-spacing)
+(bind-key [remap just-one-space] 'cycle-spacing)
 
 
 ;;; GUI frames
@@ -670,8 +670,8 @@
       (unless arg
         (select-window target-window)))))
 
-(global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
-(global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
+(bind-key "C-x 2" (split-window-func-with-other-buffer 'split-window-vertically))
+(bind-key "C-x 3" (split-window-func-with-other-buffer 'split-window-horizontally))
 
 ;; Rearrange split windows
 (defun split-window-horizontally-instead ()
@@ -692,8 +692,8 @@
     (when other-buffer
       (set-window-buffer (next-window) other-buffer))))
 
-(global-set-key (kbd "C-x |") 'split-window-horizontally-instead)
-(global-set-key (kbd "C-x _") 'split-window-vertically-instead)
+(bind-key "C-x |" 'split-window-horizontally-instead)
+(bind-key "C-x _" 'split-window-vertically-instead)
 
 ;; Borrowed from http://postmomentum.ch/blog/201304/blog-on-emacs
 (defun sanityinc/split-window()
@@ -707,7 +707,7 @@ Call a second time to restore the original window configuration."
     (window-configuration-to-register :sanityinc/split-window)
     (switch-to-buffer-other-window nil)))
 
-(global-set-key (kbd "<f7>") 'sanityinc/split-window)
+(bind-key "<f7>" 'sanityinc/split-window)
 
 ;; Toggle to dedicated window
 (defun sanityinc/toggle-current-window-dedication ()
@@ -720,7 +720,7 @@ Call a second time to restore the original window configuration."
              (if was-dedicated "no longer " "")
              (buffer-name))))
 
-(global-set-key (kbd "C-c <down>") 'sanityinc/toggle-current-window-dedication)
+(bind-key "C-c <down>" 'sanityinc/toggle-current-window-dedication)
 
 ;;; Miscellaneous config
 
