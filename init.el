@@ -652,6 +652,15 @@
 
 ;;; Working with Windows within frames
 
+;; Navigate window layouts with "M-N" and "M-P"
+(use-package winner
+  :ensure nil
+  :defer 5
+  :bind (("M-N" . winner-redo)
+         ("M-P" . winner-undo))
+  :config
+  (winner-mode 1))
+
 ;; Make "C-x o" prompt for a target window when there are more than 2
 (use-package switch-window
   :bind ("C-x o" . switch-window)
