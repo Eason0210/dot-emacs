@@ -38,4 +38,5 @@ Update the config with git ~pull~. And then run ~M-x, auto-package-update-now~
 1. [[https://github.com/purcell/emacs.d][Purcell/emacs.d]]
 2. [[https://github.com/seagle0128/.emacs.d][Centaur Emacs]]
 3. [[https://github.com/MatthewZMD/.emacs.d][M-EMACS]]
-4. [[https://github.com/douglasdavis/dot-emacs][douglasdavis/dot-emacs]]
+4. [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][jwiegley/dot-emacs]]
+5. [[https://github.com/douglasdavis/dot-emacs][douglasdavis/dot-emacs]]
