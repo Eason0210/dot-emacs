@@ -613,10 +613,16 @@
 (let ((no-border '(internal-border-width . 0)))
   (add-to-list 'default-frame-alist no-border)
   (add-to-list 'initial-frame-alist no-border))
+
 (when *is-a-mac*
   (use-package ns-auto-titlebar
     :config
     (ns-auto-titlebar-mode 1)))
+
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 
 ;; Change global font size easily
 (use-package default-text-scale
