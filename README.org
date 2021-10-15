@@ -2,19 +2,20 @@
 This is my emacs configuration, it work on Mac OS X, Linux and Windows.
 And this config is customized base on [[https://github.com/purcell/emacs.d][Purcell's Emacs config]] which I used for about one year. It's a very nice config for Emacs starter, Thanks Purcell.
 
-Why create this config?
+* Why create this config?
 
 Because I need to optimize the startup time by [[https://github.com/jwiegley/use-package][use-package]], and remove features that I don't need.
 
+* Supported Emacs versions
 Emacs itself comes with support for many programming languages. This config adds improved defaults and extended support for the following, listed in the approximate order of how much I use them, from most to least:
 
-Haskell
-C/C++
-Python
-CSS / LESS / SASS / SCSS
-Javascript / Typescript
-HTML
-Rust
+- Haskell
+- C/C++
+- Python
+- CSS / LESS / SASS / SCSS
+- Javascript / Typescript
+- HTML
+- Rust
 
 * Supported Emacs versions
 The config should run on Emacs 27.1 or greater. I use Emacs master branch personally(recently is Emacs 29.0.50).
