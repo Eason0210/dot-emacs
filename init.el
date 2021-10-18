@@ -889,6 +889,8 @@ Call a second time to restore the original window configuration."
 
 ;; Haskell mode
 (use-package haskell-mode
+  :bind (:map haskell-mode-map
+              ("C-c C-f" . ormolu-buffer))
   :hook
   (haskell-mode . interactive-haskell-mode)
   (haskell-mode . haskell-indentation-mode)
