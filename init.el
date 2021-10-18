@@ -1110,7 +1110,7 @@ there is no current file, eval the current buffer."
 (use-package rustic
   :mode "\\.rs\\'"
   :bind (:map rustic-mode-map
-              ("C-c f" . rustic-format-buffer))
+              ("C-c C-f" . rustic-format-buffer))
   :config
   (setq rustic-lsp-client 'eglot)
   (with-eval-after-load 'flycheck
