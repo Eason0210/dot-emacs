@@ -227,8 +227,6 @@
 
 (use-package flycheck
   :hook (after-init . global-flycheck-mode)
-  :init
-  (setq flycheck-check-syntax-automatically '(idle-change new-line mode-enabled))
   :config
   (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
 
@@ -1107,8 +1105,14 @@ there is no current file, eval the current buffer."
 
 
 ;; Rust mode
-(use-package rust-mode
-  :mode "\\.rs\\'")
+(use-package rustic
+  :mode "\\.rs\\'"
+  :bind (:map rustic-mode-map
+              ("C-c f" . rustic-format-buffer))
+  :config
+  (setq rustic-lsp-client 'eglot)
+  (with-eval-after-load 'flycheck
+    (push 'rustic-clippy flycheck-checkers)))
 
 ;; Lua mode
 (use-package lua-mode
