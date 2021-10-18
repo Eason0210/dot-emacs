@@ -847,6 +847,8 @@ Call a second time to restore the original window configuration."
   :mode "\\.json\\'")
 
 (use-package json-reformat
+  :bind (:map json-mode-map
+              ("C-c C-f" . json-reformat-region))
   :after json-mode)
 
 (use-package json-snatcher
