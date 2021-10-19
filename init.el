@@ -61,8 +61,7 @@
 ;; Standard package repositories
 (setq package-archives
       '(("melpa" . "https://melpa.org/packages/")
-        ("gnu" . "https://elpa.gnu.org/packages/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+        ("gnu" . "https://elpa.gnu.org/packages/")))
 
 (require 'package)
 (package-initialize)
