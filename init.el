@@ -1149,10 +1149,10 @@ there is no current file, eval the current buffer."
 (use-package eglot
   :defer t
   :bind (:map eglot-mode-map
-              ("C-c l a" . 'eglot-code-actions)
-              ("C-c l r" . 'eglot-rename)
-              ("C-c l f" . 'eglot-format)
-              ("C-c l d" . 'eldoc))
+              ("C-c l a" . eglot-code-actions)
+              ("C-c l r" . eglot-rename)
+              ("C-c l f" . eglot-format)
+              ("C-c l d" . eldoc))
   :hook (eglot-managed-mode . (lambda () (flymake-mode -1)))
   :config
   (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
