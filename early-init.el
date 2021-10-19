@@ -10,6 +10,7 @@
 
 (setq package-enable-at-startup nil)
 (setq org-modules-loaded t)
+(setq frame-inhibit-implied-resize t)
 
 ;; So we can detect this having been loaded
 (provide 'early-init)
