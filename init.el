@@ -714,7 +714,8 @@
 
 ;; Rearrange split windows
 (defun split-window-horizontally-instead ()
-  "Kill any other windows and re-split such that the current window is on the top half of the frame."
+  "Kill any other windows and re-split
+ such that the current window is on the top half of the frame."
   (interactive)
   (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
     (delete-other-windows)
@@ -723,7 +724,8 @@
       (set-window-buffer (next-window) other-buffer))))
 
 (defun split-window-vertically-instead ()
-  "Kill any other windows and re-split such that the current window is on the left half of the frame."
+  "Kill any other windows and re-split
+ such that the current window is on the left half of the frame."
   (interactive)
   (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
     (delete-other-windows)
@@ -995,7 +997,8 @@ Call a second time to restore the original window configuration."
       (pp-eval-last-sexp prefix)))
 
   (defun sanityinc/make-read-only (expression out-buffer-name)
-    "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
+    "Enable `view-mode' in the output buffer.
+if any - so it can be closed with `\"q\"."
     (when (get-buffer out-buffer-name)
       (with-current-buffer out-buffer-name
         (view-mode 1))))
