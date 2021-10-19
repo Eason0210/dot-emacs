@@ -1322,17 +1322,17 @@ typical word processor."
          (flyspell-mode . (lambda ()
                             (dolist (key '("C-;" "C-."))
                               (unbind-key key flyspell-mode-map)))))
-  :init (setq flyspell-issue-message-flag nil
-              ispell-program-name "aspell"
-              ispell-extra-args '("--sug-mode=fast" "--lang=en_US" "--camel-case")
-              ispell-personal-dictionary
-              (expand-file-name "en_US.personal" "~/.config/aspell/"))
-  :config
-  ;; Correcting words with flyspell via completing-read
-  (use-package flyspell-correct
-    :after flyspell
-    :bind (:map flyspell-mode-map ("C-," . flyspell-correct-wrapper))))
+  :init
+  (setq flyspell-issue-message-flag nil
+        ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=fast" "--lang=en_US" "--camel-case")
+        ispell-personal-dictionary
+        (expand-file-name "en_US.personal" "~/.config/aspell/")))
 
+;; Correcting words with flyspell via completing-read
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map ("C-," . flyspell-correct-wrapper)))
 
 ;;; Font
 
