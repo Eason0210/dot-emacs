@@ -433,6 +433,10 @@
           (when-let (project (project-current))
             (car (project-roots project))))))
 
+(use-package consult-flycheck
+  :defer t
+  :after (consult flycheck))
+
 (use-package marginalia :init (marginalia-mode))
 
 
