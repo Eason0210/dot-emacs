@@ -1092,7 +1092,7 @@ there is no current file, eval the current buffer."
 
 ;; Rust mode
 (use-package rustic
-  :mode "\\.rs\\'"
+  :mode ("\\.rs\\'" . rustic-mode)
   :bind (:map rustic-mode-map
               ("C-c C-f" . rustic-format-buffer))
   :config
