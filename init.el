@@ -758,11 +758,15 @@ Call a second time to restore the original window configuration."
          ("C-c -" . shift-number-down)))
 
 ;; Auto save
-(use-package auto-save
-  :ensure nil
+(use-package super-save
+  :diminish
+  :defer 0.5
   :config
-  (setq auto-save-silent t)
-  (auto-save-enable))
+  (add-to-list 'super-save-triggers 'switch-window)
+  (setq super-save-idle-duration 1)
+  (setq super-save-auto-save-when-idle t)
+  (setq save-silently t)  
+  (super-save-mode 1))
 
 ;; Rime
 
