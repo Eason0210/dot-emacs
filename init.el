@@ -907,8 +907,8 @@ Call a second time to restore the original window configuration."
   :init (setq-default c-basic-offset 4))
 
 (use-package modern-cpp-font-lock
-  :init
-  (modern-c++-font-lock-global-mode +1))
+  :diminish modern-c++-font-lock-mode
+  :hook (c++-mode . modern-c++-font-lock-mode))
 
 
 ;; Haskell mode
