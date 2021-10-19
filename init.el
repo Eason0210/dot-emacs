@@ -766,8 +766,11 @@ Call a second time to restore the original window configuration."
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
-(add-hook 'prog-mode-hook 'goto-address-prog-mode)
-(setq goto-address-mail-face 'link)
+(use-package goto-addr
+  :ensure nil
+  :hook (prog-mode . goto-address-prog-mode)
+  :config
+  (setq goto-address-mail-face 'link))
 
 (use-package shift-number
   :bind (("C-c +" . shift-number-up)
