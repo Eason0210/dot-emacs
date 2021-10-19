@@ -994,7 +994,7 @@ Call a second time to restore the original window configuration."
         (eval-region (min (point) (mark)) (max (point) (mark)))
       (pp-eval-last-sexp prefix)))
 
-  (defun sanityinc/make-read-only (expression out-buffer-name)
+  (defun sanityinc/make-read-only (out-buffer-name)
     "Enable `view-mode' in the output buffer.
 if any - so it can be closed with `\"q\"."
     (when (get-buffer out-buffer-name)
