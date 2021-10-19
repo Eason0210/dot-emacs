@@ -914,8 +914,6 @@ Call a second time to restore the original window configuration."
 
 ;; Haskell mode
 (use-package haskell-mode
-  :bind (:map haskell-mode-map
-              ("C-c C-f" . ormolu-buffer))
   :hook
   (haskell-mode . interactive-haskell-mode)
   (haskell-mode . haskell-indentation-mode)
@@ -932,13 +930,13 @@ Call a second time to restore the original window configuration."
   :config
   (reformatter-define hindent
     :program "hindent"
-    :lighter " Hin")
-
-  (defalias 'hindent-mode 'hindent-on-save-mode)
+    :lighter " Hin"
+    :group 'haskell)
 
   (reformatter-define ormolu
     :program "ormolu"
-    :lighter " Orm"))
+    :lighter " Orm"
+    :group 'haskell))
 
 ;; Lisp mode
 (use-package paredit
