@@ -810,14 +810,6 @@ Call a second time to restore the original window configuration."
   (when *is-a-mac*
     (setq rime-librime-root  "~/emacs-data/librime/dist")
     (setq rime-emacs-module-header-root "~/.nix-profile/include"))
-  :config
-  ;; change cursor color automatically
-  (use-package im-cursor-chg
-    :ensure nil
-    :commands cursor-chg-mode
-    :after rime
-    :config
-    (cursor-chg-mode 1))
   :preface
   (defconst rime-usr-data-exists-p
     (file-exists-p "~/emacs-data/rime")
@@ -829,6 +821,14 @@ Call a second time to restore the original window configuration."
     (if (equal rime-show-candidate nil)
         (setq rime-show-candidate 'minibuffer)
       (setq rime-show-candidate nil))))
+
+;; change cursor color automatically
+(use-package im-cursor-chg
+  :ensure nil
+  :functions cursor-chg-mode
+  :after rime
+  :config
+  (cursor-chg-mode 1))
 
 
 ;;; Helpers for M-x compile
