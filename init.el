@@ -109,11 +109,12 @@
 
 ;; Auto update packages
 (use-package auto-package-update
-  :commands use-package-statistics-gather
-  :init
-  (setq auto-package-update-delete-old-versions t
-        auto-package-update-hide-results t)
-  (defalias 'upgrade-packages #'auto-package-update-now))
+  :custom
+  (auto-package-update-interval 7)
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
+  :config
+  (auto-package-update-maybe))
 
 
 (use-package diminish)
@@ -211,7 +212,6 @@
 
 
 (use-package dimmer
-  :commands dimmer-process-all
   :hook (after-init . dimmer-mode)
   :config
   (setq-default dimmer-fraction 0.15)
@@ -225,14 +225,13 @@
 ;;; Configure FlyCheck global behavior
 
 (use-package flycheck
-  :commands flycheck-display-error-messages-unless-error-list
   :hook (after-init . global-flycheck-mode)
   :config
-  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list))
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
 
-(use-package flycheck-color-mode-line
-  :hook (flycheck-mode . flycheck-color-mode-line-mode)
-  :after flycheck)
+  (use-package flycheck-color-mode-line
+    :hook (flycheck-mode . flycheck-color-mode-line-mode)
+    :after flycheck))
 
 
 ;;; Dired mode
@@ -296,7 +295,6 @@
 
 ;; YASnippet
 (use-package yasnippet
-  :commands (yas-reload-all yas-expand yas-next-field)
   :diminish yas-minor-mode
   :init
   (use-package yasnippet-snippets :after yasnippet)
@@ -322,7 +320,6 @@
 ;; Completion with company
 (use-package company
   :diminish
-  :commands company-complete-common
   :bind
   (:map company-active-map
         ("TAB" . smarter-tab-to-complete)
@@ -350,30 +347,29 @@
 
 
 (use-package consult
-  :commands (consult--customize-set project-roots)
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
          ("C-c m" . consult-mode-command)
          ("C-c b" . consult-bookmark)
          ("C-c k" . consult-kmacro)
          ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
          ("C-M-#" . consult-register)
          ;; Other custom bindings
-         ("M-y" . consult-yank-pop)     ;; orig. yank-pop
-         ("<help> a" . consult-apropos) ;; orig. apropos-command
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flycheck)  ;; Alternative: consult-flymake
-         ("M-g g" . consult-goto-line) ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line) ;; orig. goto-line
-         ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
+         ("M-g f" . consult-flycheck)               ;; Alternative: consult-flymake
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
@@ -392,9 +388,9 @@
          ;; Isearch integration
          ("M-s e" . consult-isearch)
          :map isearch-mode-map
-         ("M-e" . consult-isearch)   ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch) ;; orig. isearch-edit-string
-         ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
+         ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
          ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
 
   :init
@@ -504,7 +500,6 @@
 
 (use-package vlf
   :defer t
-  :commands ffap-file-at-point
   :preface
   (defun ffap-vlf ()
     "Find file at point with VLF."
@@ -809,7 +804,6 @@ Call a second time to restore the original window configuration."
   ;; change cursor color automatically
   (use-package im-cursor-chg
     :ensure nil
-    :commands cursor-chg-mode
     :after rime
     :config
     (cursor-chg-mode 1))
@@ -848,7 +842,6 @@ Call a second time to restore the original window configuration."
 ;; JavaScript
 (use-package js2-mode
   :mode "\\.js\\'"
-  :commands (flycheck-add-mode javascript-jshint)
   :init
   (setq-default js-indent-level 2)
   :config
@@ -914,7 +907,6 @@ Call a second time to restore the original window configuration."
   (haskell-mode . haskell-auto-insert-module-template))
 
 (use-package dante
-  :commands flycheck-add-next-checker
   :after (haskell-mode flycheck)
   :hook (haskell-mode . dante-mode)
   :config
@@ -934,7 +926,6 @@ Call a second time to restore the original window configuration."
 
 ;; Lisp mode
 (use-package paredit
-  :commands bind-key--remove
   :diminish paredit-mode " Par"
   :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
   :bind (:map paredit-mode-map
