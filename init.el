@@ -915,6 +915,7 @@ Call a second time to restore the original window configuration."
   (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
 
 (use-package reformatter
+  :after haskell-mode
   :config
   (reformatter-define hindent
     :program "hindent"
