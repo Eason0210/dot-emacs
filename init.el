@@ -109,12 +109,10 @@
 
 ;; Auto update packages
 (use-package auto-package-update
-  :custom
-  (auto-package-update-interval 7)
-  (auto-package-update-delete-old-versions t)
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe))
+  :init
+  (setq auto-package-update-delete-old-versions t
+        auto-package-update-hide-results t)
+  (defalias 'upgrade-packages #'auto-package-update-now))
 
 
 (use-package diminish)
