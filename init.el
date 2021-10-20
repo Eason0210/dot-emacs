@@ -1345,7 +1345,7 @@ typical word processor."
    ((eq system-type 'windows-nt)
     '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110)))
    (t
-    '(("SF Mono" . 190) ("Consolas" . 200) ("Cascadia Mono" . 190))))
+    '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110))))
   "List of fonts and sizes.  The first one available will be used.")
 
 (defun font-installed-p (font-name)
