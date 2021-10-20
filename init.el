@@ -215,7 +215,7 @@
   :hook (after-init . dimmer-mode)
   :config
   (setq-default dimmer-fraction 0.15)
-  (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))  
+  (advice-add 'frame-set-background-mode :after (lambda (&rest args) (dimmer-process-all)))
   (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p)
   :preface
   (defun sanityinc/display-non-graphic-p ()
@@ -771,7 +771,7 @@ Call a second time to restore the original window configuration."
   (add-to-list 'super-save-triggers 'switch-window)
   (setq super-save-idle-duration 1)
   (setq super-save-auto-save-when-idle t)
-  (setq save-silently t)  
+  (setq save-silently t)
   (super-save-mode 1))
 
 ;; Rime
@@ -811,7 +811,7 @@ Call a second time to restore the original window configuration."
   (defconst rime-usr-data-exists-p
     (file-exists-p "~/emacs-data/rime")
     "Checking if there is a rime user data.")
-  
+
   (defun rime-toggle-show-candidate ()
     "Use minibuffer for candidate if current is nil."
     (interactive)
