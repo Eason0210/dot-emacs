@@ -1269,7 +1269,8 @@ typical word processor."
 (when (and (executable-find "sqlite3") (executable-find "cc"))
   (use-package org-roam
     :diminish
-    :bind (("C-c n l" . org-roam-buffer-toggle)
+    :bind (("C-c n a" . org-roam-db-autosync-mode)
+           ("C-c n l" . org-roam-buffer-toggle)
            ("C-c n f" . org-roam-node-find)
            ("C-c n g" . org-roam-graph)
            ("C-c n i" . org-roam-node-insert)
