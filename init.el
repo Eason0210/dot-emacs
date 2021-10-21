@@ -1269,14 +1269,14 @@ typical word processor."
 (when (and (executable-find "sqlite3") (executable-find "cc"))
   (use-package org-roam
     :diminish
-    :hook (after-init . org-roam-db-autosync-enable)
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n f" . org-roam-node-find)
            ("C-c n g" . org-roam-graph)
            ("C-c n i" . org-roam-node-insert)
            ("C-c n c" . org-roam-capture)
            ("C-c n j" . org-roam-dailies-capture-today)
-           ("C-c n r" . org-roam-ref-find))
+           ("C-c n r" . org-roam-ref-find)
+           ("C-c n s" . org-roam-db-sync))
     :init
     (setq org-roam-directory (file-truename "~/.org/org-roam")
           org-roam-db-location "~/.org/org-roam.db"
