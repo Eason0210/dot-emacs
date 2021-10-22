@@ -163,12 +163,6 @@
 
 (use-package scratch :defer t)
 
-;;; Osx-key
-
-(when *is-a-mac*
-  (setq mac-command-modifier 'meta)
-  (setq mac-option-modifier 'none))
-
 ;;; Themes
 
 (use-package color-theme-sanityinc-tomorrow
@@ -220,17 +214,58 @@
   (defun sanityinc/display-non-graphic-p ()
     (not (display-graphic-p))))
 
+;;; Configure keys specific to MacOS
 
-;;; Configure FlyCheck global behavior
+(when *is-a-mac*
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier 'none))
 
-(use-package flycheck
-  :hook (after-init . global-flycheck-mode)
-  :config
-  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
 
-  (use-package flycheck-color-mode-line
-    :hook (flycheck-mode . flycheck-color-mode-line-mode)
-    :after flycheck))
+;;; GUI frames
+
+;; Suppress GUI features
+
+(setq use-file-dialog nil)
+(setq use-dialog-box nil)
+(setq inhibit-startup-screen t)
+
+;; Window size and features
+
+(setq-default
+ window-resize-pixelwise t
+ frame-resize-pixelwise t)
+
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'set-scroll-bar-mode)
+  (set-scroll-bar-mode nil))
+
+(menu-bar-mode -1)
+
+(let ((no-border '(internal-border-width . 0)))
+  (add-to-list 'default-frame-alist no-border)
+  (add-to-list 'initial-frame-alist no-border))
+
+(when *is-a-mac*
+  (use-package ns-auto-titlebar
+    :config
+    (ns-auto-titlebar-mode 1)))
+
+(when (and *is-a-mac* (fboundp 'toggle-frame-fullscreen))
+  ;; Command-Option-f to toggle fullscreen mode
+  ;; Hint: Customize `ns-use-native-fullscreen'
+  (bind-key "M-ƒ" 'toggle-frame-fullscreen))
+
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
+
+;; Change global font size easily
+(use-package default-text-scale
+  :bind (("C-M-=" . default-text-scale-increase)
+         ("C-M--" . default-text-scale-decrease)
+         ("C-M-0" . default-text-scale-reset)))
 
 
 ;;; Dired mode
@@ -245,13 +280,36 @@
   :config
   (diredfl-global-mode 1))
 
-;;; Show line number
 
-(use-package display-line-numbers
+;;; Ibuffer settings
+
+(use-package ibuffer
   :ensure nil
-  :hook (prog-mode . display-line-numbers-mode)
+  :bind ("C-x C-b" . ibuffer))
+
+
+;;; Configure FlyCheck global behavior
+
+(use-package flycheck
+  :hook (after-init . global-flycheck-mode)
   :config
-  (setq-default display-line-numbers-width 3))
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
+
+  (use-package flycheck-color-mode-line
+    :hook (flycheck-mode . flycheck-color-mode-line-mode)
+    :after flycheck))
+
+
+
+;;; Settings for tracking recent files
+
+(use-package recentf
+  :ensure nil
+  :hook (after-init . recentf-mode)
+  :config
+  (setq-default
+   recentf-max-saved-items 1000
+   recentf-exclude `("/tmp/" "/ssh:" ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
 
 
 ;;; Minibuffer config
@@ -452,6 +510,163 @@
           try-expand-dabbrev-from-kill)))
 
 
+;;; Working with Windows within frames
+
+;; Navigate window layouts with "M-N" and "M-P"
+(use-package winner
+  :ensure nil
+  :defer 5
+  :bind (("M-N" . winner-redo)
+         ("M-P" . winner-undo))
+  :config
+  (winner-mode 1))
+
+;; Make "C-x o" prompt for a target window when there are more than 2
+(use-package switch-window
+  :bind ("C-x o" . switch-window)
+  :config
+  (setq-default switch-window-shortcut-style 'alphabet)
+  (setq-default switch-window-timeout nil))
+
+;; When splitting window, show (other-buffer) in the new window
+(defun split-window-func-with-other-buffer (split-function)
+  (lambda (&optional arg)
+    "Split this window and switch to the new window unless ARG is provided."
+    (interactive "P")
+    (funcall split-function)
+    (let ((target-window (next-window)))
+      (set-window-buffer target-window (other-buffer))
+      (unless arg
+        (select-window target-window)))))
+
+(bind-key "C-x 2" (split-window-func-with-other-buffer 'split-window-vertically))
+(bind-key "C-x 3" (split-window-func-with-other-buffer 'split-window-horizontally))
+
+;; Rearrange split windows
+(defun split-window-horizontally-instead ()
+  "Kill any other windows and re-split such that the current window is on the top half of the frame."
+  (interactive)
+  (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
+    (delete-other-windows)
+    (split-window-horizontally)
+    (when other-buffer
+      (set-window-buffer (next-window) other-buffer))))
+
+(defun split-window-vertically-instead ()
+  "Kill any other windows and re-split such that the current window is on the left half of the frame."
+  (interactive)
+  (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
+    (delete-other-windows)
+    (split-window-vertically)
+    (when other-buffer
+      (set-window-buffer (next-window) other-buffer))))
+
+(bind-key "C-x |" 'split-window-horizontally-instead)
+(bind-key "C-x _" 'split-window-vertically-instead)
+
+;; Borrowed from http://postmomentum.ch/blog/201304/blog-on-emacs
+(defun sanityinc/split-window()
+  "Split the window to see the most recent buffer in the other window.
+Call a second time to restore the original window configuration."
+  (interactive)
+  (if (eq last-command 'sanityinc/split-window)
+      (progn
+        (jump-to-register :sanityinc/split-window)
+        (setq this-command 'sanityinc/unsplit-window))
+    (window-configuration-to-register :sanityinc/split-window)
+    (switch-to-buffer-other-window nil)))
+
+(bind-key "<f7>" 'sanityinc/split-window)
+
+;; Toggle to dedicated window
+(defun sanityinc/toggle-current-window-dedication ()
+  "Toggle whether the current window is dedicated to its current buffer."
+  (interactive)
+  (let* ((window (selected-window))
+         (was-dedicated (window-dedicated-p window)))
+    (set-window-dedicated-p window (not was-dedicated))
+    (message "Window %sdedicated to %s"
+             (if was-dedicated "no longer " "")
+             (buffer-name))))
+
+(bind-key "C-c <down>" 'sanityinc/toggle-current-window-dedication)
+
+
+;;; Save and restore editor sessions between restarts
+
+;; Save a list of open files in ~/.emacs.d/.emacs.desktop
+(use-package desktop
+  :ensure nil
+  :config
+  (setq desktop-path (list user-emacs-directory)
+        desktop-auto-save-timeout 600)
+  
+  (advice-add 'desktop-read :around 'sanityinc/desktop-time-restore)
+  (advice-add 'desktop-create-buffer :around 'sanityinc/desktop-time-buffer-create)
+
+  ;; Save a bunch of variables to the desktop file
+  ;; for lists specify the len of the maximal saved data also
+  (setq desktop-globals-to-save
+        '((comint-input-ring        . 50)
+          (compile-history          . 30)
+          desktop-missing-file-warning
+          (dired-regexp-history     . 20)
+          (extended-command-history . 30)
+          (face-name-history        . 20)
+          (file-name-history        . 100)
+          (grep-find-history        . 30)
+          (grep-history             . 30)
+          (magit-revision-history   . 50)
+          (minibuffer-history       . 50)
+          (org-clock-history        . 50)
+          (org-refile-history       . 50)
+          (org-tags-history         . 50)
+          (query-replace-history    . 60)
+          (read-expression-history  . 60)
+          (regexp-history           . 60)
+          (regexp-search-ring       . 20)
+          register-alist
+          (search-ring              . 20)
+          (shell-command-history    . 50)
+          tags-file-name
+          tags-table-list))
+
+  (desktop-save-mode 1)
+  :preface
+  (defun sanityinc/desktop-time-restore (orig &rest args)
+    (let ((start-time (current-time)))
+      (prog1
+          (apply orig args)
+        (message "Desktop restored in %.2fms"
+                 (sanityinc/time-subtract-millis (current-time)
+                                                 start-time)))))
+  
+  (defun sanityinc/desktop-time-buffer-create (orig ver filename &rest args)
+    (let ((start-time (current-time)))
+      (prog1
+          (apply orig ver filename args)
+        (message "Desktop: %.2fms to restore %s"
+                 (sanityinc/time-subtract-millis (current-time)
+                                                 start-time)
+                 (when filename
+                   (abbreviate-file-name filename)))))))
+
+;; Restore histories and registers after saving
+
+(use-package savehist
+  :ensure nil
+  :init
+  (savehist-mode))
+
+(use-package session
+  :hook (after-init . session-initialize)
+  :config
+  (setq session-save-file (locate-user-emacs-file ".session"))
+  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
+  (setq session-save-file-coding-system 'utf-8))
+
+
+
 ;;; Editing utils
 
 (when (fboundp 'electric-pair-mode)
@@ -562,6 +777,13 @@
   :config
   (setq-default which-key-idle-delay 1.5))
 
+;; Show line number
+(use-package display-line-numbers
+  :ensure nil
+  :hook (prog-mode . display-line-numbers-mode)
+  :config
+  (setq-default display-line-numbers-width 3))
+
 ;; Treat undo history as a tree
 (use-package undo-tree
   :diminish
@@ -589,57 +811,8 @@
 (bind-key [remap just-one-space] 'cycle-spacing)
 
 
-;;; GUI frames
-
-;; Suppress GUI features
-
-(setq use-file-dialog nil)
-(setq use-dialog-box nil)
-(setq inhibit-startup-screen t)
-
-;; Window size and features
-
-(setq-default
- window-resize-pixelwise t
- frame-resize-pixelwise t)
-
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
-(when (fboundp 'set-scroll-bar-mode)
-  (set-scroll-bar-mode nil))
-
-(menu-bar-mode -1)
-
-(let ((no-border '(internal-border-width . 0)))
-  (add-to-list 'default-frame-alist no-border)
-  (add-to-list 'initial-frame-alist no-border))
-
-(when *is-a-mac*
-  (use-package ns-auto-titlebar
-    :config
-    (ns-auto-titlebar-mode 1)))
-
-(when (and *is-a-mac* (fboundp 'toggle-frame-fullscreen))
-  ;; Command-Option-f to toggle fullscreen mode
-  ;; Hint: Customize `ns-use-native-fullscreen'
-  (bind-key "M-ƒ" 'toggle-frame-fullscreen))
-
-(setq frame-title-format
-      '((:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
-
-;; Change global font size easily
-(use-package default-text-scale
-  :bind (("C-M-=" . default-text-scale-increase)
-         ("C-M--" . default-text-scale-decrease)
-         ("C-M-0" . default-text-scale-reset)))
-
 
 ;;; Version control
-
-(use-package magit
-  :bind (("C-x g" . magit-status)))
 
 (use-package diff-hl
   :bind (:map diff-hl-mode
@@ -649,174 +822,9 @@
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
 
+(use-package magit
+  :bind (("C-x g" . magit-status)))
 
-;;; Settings for tracking recent files
-
-(use-package recentf
-  :ensure nil
-  :hook (after-init . recentf-mode)
-  :config
-  (setq-default
-   recentf-max-saved-items 1000
-   recentf-exclude `("/tmp/" "/ssh:" ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
-
-;;; Ibuffer settings
-
-(use-package ibuffer
-  :ensure nil
-  :bind ("C-x C-b" . ibuffer))
-
-
-;;; Working with Windows within frames
-
-;; Navigate window layouts with "M-N" and "M-P"
-(use-package winner
-  :ensure nil
-  :defer 5
-  :bind (("M-N" . winner-redo)
-         ("M-P" . winner-undo))
-  :config
-  (winner-mode 1))
-
-;; Make "C-x o" prompt for a target window when there are more than 2
-(use-package switch-window
-  :bind ("C-x o" . switch-window)
-  :config
-  (setq-default switch-window-shortcut-style 'alphabet)
-  (setq-default switch-window-timeout nil))
-
-;; When splitting window, show (other-buffer) in the new window
-(defun split-window-func-with-other-buffer (split-function)
-  (lambda (&optional arg)
-    "Split this window and switch to the new window unless ARG is provided."
-    (interactive "P")
-    (funcall split-function)
-    (let ((target-window (next-window)))
-      (set-window-buffer target-window (other-buffer))
-      (unless arg
-        (select-window target-window)))))
-
-(bind-key "C-x 2" (split-window-func-with-other-buffer 'split-window-vertically))
-(bind-key "C-x 3" (split-window-func-with-other-buffer 'split-window-horizontally))
-
-;; Rearrange split windows
-(defun split-window-horizontally-instead ()
-  "Kill any other windows and re-split such that the current window is on the top half of the frame."
-  (interactive)
-  (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
-    (delete-other-windows)
-    (split-window-horizontally)
-    (when other-buffer
-      (set-window-buffer (next-window) other-buffer))))
-
-(defun split-window-vertically-instead ()
-  "Kill any other windows and re-split such that the current window is on the left half of the frame."
-  (interactive)
-  (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
-    (delete-other-windows)
-    (split-window-vertically)
-    (when other-buffer
-      (set-window-buffer (next-window) other-buffer))))
-
-(bind-key "C-x |" 'split-window-horizontally-instead)
-(bind-key "C-x _" 'split-window-vertically-instead)
-
-;; Borrowed from http://postmomentum.ch/blog/201304/blog-on-emacs
-(defun sanityinc/split-window()
-  "Split the window to see the most recent buffer in the other window.
-Call a second time to restore the original window configuration."
-  (interactive)
-  (if (eq last-command 'sanityinc/split-window)
-      (progn
-        (jump-to-register :sanityinc/split-window)
-        (setq this-command 'sanityinc/unsplit-window))
-    (window-configuration-to-register :sanityinc/split-window)
-    (switch-to-buffer-other-window nil)))
-
-(bind-key "<f7>" 'sanityinc/split-window)
-
-;; Toggle to dedicated window
-(defun sanityinc/toggle-current-window-dedication ()
-  "Toggle whether the current window is dedicated to its current buffer."
-  (interactive)
-  (let* ((window (selected-window))
-         (was-dedicated (window-dedicated-p window)))
-    (set-window-dedicated-p window (not was-dedicated))
-    (message "Window %sdedicated to %s"
-             (if was-dedicated "no longer " "")
-             (buffer-name))))
-
-(bind-key "C-c <down>" 'sanityinc/toggle-current-window-dedication)
-
-;;; Miscellaneous config
-
-(defalias 'yes-or-no-p #'y-or-n-p)
-
-(use-package goto-addr
-  :ensure nil
-  :hook (prog-mode . goto-address-prog-mode)
-  :config
-  (setq goto-address-mail-face 'link))
-
-(use-package shift-number
-  :bind (("C-c +" . shift-number-up)
-         ("C-c -" . shift-number-down)))
-
-;; Auto save
-(use-package super-save
-  :diminish
-  :defer 0.5
-  :config
-  (add-to-list 'super-save-triggers 'switch-window)
-  (setq super-save-idle-duration 1)
-  (setq super-save-auto-save-when-idle t)
-  (setq save-silently t)
-  (super-save-mode 1))
-
-;; Rime
-
-(use-package rime
-  :if rime-usr-data-exists-p
-  :bind (("C-\\" . toggle-input-method)
-         ("C-`" . rime-send-keybinding)
-         ([f8] . rime-toggle-show-candidate))
-  :init
-  (setq
-   rime-inline-predicates '(rime-predicate-space-after-cc-p
-                            rime-predicate-current-uppercase-letter-p)
-   rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g")
-   rime-inline-ascii-trigger 'shift-r
-   rime-inline-ascii-holder ?a
-   default-input-method "rime"
-   rime-cursor "|"
-   rime-show-candidate nil
-   window-min-height 1
-   rime-user-data-dir "~/emacs-data/rime"
-   rime-title "")
-  (when (eq system-type 'windows-nt)
-    (setq rime-share-data-dir
-          "~/scoop/apps/msys2/current/mingw64/share/rime-data"))
-  (when *is-a-mac*
-    (setq rime-librime-root  "~/emacs-data/librime/dist")
-    (setq rime-emacs-module-header-root "~/.nix-profile/include"))
-  :config
-  ;; change cursor color automatically
-  (use-package im-cursor-chg
-    :ensure nil
-    :after rime
-    :config
-    (cursor-chg-mode 1))
-  :preface
-  (defconst rime-usr-data-exists-p
-    (file-exists-p "~/emacs-data/rime")
-    "Checking if there is a rime user data.")
-
-  (defun rime-toggle-show-candidate ()
-    "Use minibuffer for candidate if current is nil."
-    (interactive)
-    (if (equal rime-show-candidate nil)
-        (setq rime-show-candidate 'minibuffer)
-      (setq rime-show-candidate nil))))
 
 
 ;;; Helpers for M-x compile
@@ -826,6 +834,140 @@ Call a second time to restore the original window configuration."
   :bind ([f6] . recompile)
   :config
   (setq-default compilation-scroll-output t))
+
+;;Configuration for quickrun
+(use-package quickrun
+  :bind (("<f5>" . quickrun)
+         ("C-<f5>" . quickrun-shell))
+  :config
+  (quickrun-add-command "c++/c1z"
+    '((:command . "g++")
+      (:exec    . ("%c -std=c++1z %o -o %e %s"
+		   "%e %a"))
+      (:remove  . ("%e")))
+    :default "c++"))
+
+
+;;; Org configurations
+
+(use-package org
+  :ensure nil
+  :bind (("C-c a" . org-agenda)
+         ("C-c x" . org-capture)
+         :map org-mode-map
+         ("C-c i a" . org-id-get-create)
+         ("C-c e d" . org-export-docx))
+  :config
+  ;; To speed up startup, don't put to init section
+  (setq org-hide-emphasis-markers t)
+
+  ;; Babel
+  (setq org-confirm-babel-evaluate nil
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   `((C . t)
+     (calc . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (haskell . t)
+     (python . t)
+     (sql . t)
+     (sqlite . t)))
+
+  :preface
+  ;; Export to docx
+  (defun org-export-docx ()
+    (interactive)
+    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
+          (template-file (expand-file-name "template/template.docx"
+                                           user-emacs-directory)))
+      (shell-command (format "pandoc %s -o %s --reference-doc=%s"
+                             (buffer-file-name)
+                             docx-file
+                             template-file))
+      (message "Convert finish: %s" docx-file))))
+
+
+;; Writing mode similar to the famous Writeroom editor for OS X
+(use-package writeroom-mode
+  :hook (org-mode . prose-mode)
+  :preface
+  (define-minor-mode prose-mode
+    "Set up a buffer for prose editing.
+This enables or modifies a number of settings so that the
+experience of editing prose is a little more like that of a
+typical word processor."
+    :init-value nil :lighter " Prose" :keymap nil
+    (if prose-mode
+        (progn
+          (when (fboundp 'writeroom-mode)
+            (writeroom-mode 1))
+          (setq truncate-lines nil)
+          (setq word-wrap t)
+          (setq word-wrap-by-category t)
+          (setq cursor-type 'bar)
+          (when (eq major-mode 'org)
+            (kill-local-variable 'buffer-face-mode-face))
+          (buffer-face-mode 1)
+          ;;(delete-selection-mode 1)
+          (setq-local blink-cursor-interval 0.6)
+          (setq-local show-trailing-whitespace nil)
+          (setq-local line-spacing 0.2)
+          (setq-local electric-pair-mode nil)
+          (ignore-errors (flyspell-mode 1))
+          (visual-line-mode 1))
+      (kill-local-variable 'truncate-lines)
+      (kill-local-variable 'word-wrap)
+      (kill-local-variable 'word-wrap-by-category)
+      (kill-local-variable 'cursor-type)
+      (kill-local-variable 'blink-cursor-interval)
+      (kill-local-variable 'show-trailing-whitespace)
+      (kill-local-variable 'line-spacing)
+      (kill-local-variable 'electric-pair-mode)
+      (buffer-face-mode -1)
+      ;; (delete-selection-mode -1)
+      (flyspell-mode -1)
+      (visual-line-mode -1)
+      (when (fboundp 'writeroom-mode)
+        (writeroom-mode 0)))))
+
+
+;; Roam
+(when (and (executable-find "sqlite3") (executable-find "cc"))
+  (use-package org-roam
+    :diminish
+    :bind (("C-c n a" . org-roam-db-autosync-mode)
+           ("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ("C-c n j" . org-roam-dailies-capture-today)
+           ("C-c n r" . org-roam-ref-find)
+           ("C-c n s" . org-roam-db-sync))
+    :init
+    (setq org-roam-directory (file-truename "~/.org/org-roam")
+          org-roam-db-location "~/.org/org-roam.db"
+          org-roam-db-gc-threshold most-positive-fixnum
+          org-roam-v2-ack t)
+    :config
+    (unless (file-exists-p org-roam-directory)
+      (make-directory org-roam-directory t))
+
+    (add-to-list 'display-buffer-alist
+                 '("\\*org-roam\\*"
+                   (display-buffer-in-direction)
+                   (direction . right)
+                   (window-width . 0.33)
+                   (window-height . fit-window-to-buffer)))))
+
+;;; Markdown support
+(use-package markdown-mode
+  :mode (("\\.md\\.html\\'" . markdown-mode)
+         ("README\\.md\\'" . gfm-mode)))
 
 
 ;;; Web configurations
@@ -883,9 +1025,10 @@ Call a second time to restore the original window configuration."
   (setq web-mode-code-indent-offset 2))
 
 
-;;; Programming languages support
+;;;; Programming languages support
 
-;; C/C++ Mode
+;;; C/C++ Mode
+
 (use-package cc-mode
   :ensure nil
   :bind (:map c-mode-base-map
@@ -898,7 +1041,8 @@ Call a second time to restore the original window configuration."
   :hook (c++-mode . modern-c++-font-lock-mode))
 
 
-;; Haskell mode
+;;; Haskell mode
+
 (use-package haskell-mode
   :bind (:map haskell-mode-map
               ("C-c C-f" . ormolu-buffer))
@@ -926,7 +1070,61 @@ Call a second time to restore the original window configuration."
     :program "ormolu"
     :lighter " Orm"))
 
-;; Lisp mode
+;;; Rust mode
+
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :bind (:map rustic-mode-map
+              ("C-c C-f" . rustic-format-buffer))
+  :config
+  (setq rustic-lsp-client 'eglot)
+  (with-eval-after-load 'flycheck
+    (push 'rustic-clippy flycheck-checkers)))
+
+
+;;; Basic support for programming in J
+
+(use-package j-mode
+  :defer t
+  :hook (inferior-j-mode . (lambda () (electric-pair-mode -1)))
+  :config
+  (setq-default j-console-cmd "jconsole"))
+
+
+;;; Support Yaml files
+
+(use-package yaml-mode
+  :mode "\\.ya?ml\\'"
+  :hook (yaml-mode . goto-address-prog-mode))
+
+
+;;; Lua mode
+
+(use-package lua-mode
+  :mode "\\.lua\\'")
+
+
+;;; Support for the Nix package manager
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
+(use-package nixpkgs-fmt
+  :after nix-mode
+  :bind (:map nix-mode-map
+              ("C-c C-f" . nixpkgs-fmt)))
+
+
+;;; Support MSCL mode
+
+(use-package mscl-mode
+  :ensure nil
+  :mode "\\.pwx?macro\\'")
+
+
+
+;;; Configure paredit structured editing
+
 (use-package paredit
   :diminish paredit-mode " Par"
   :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
@@ -952,6 +1150,8 @@ Call a second time to restore the original window configuration."
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
+
+;;; Emacs lisp settings, and common config for other lisps
 
 ;; Make C-x C-e run 'eval-region if the region is active
 
@@ -1100,53 +1300,8 @@ there is no current file, eval the current buffer."
 (add-to-list 'auto-mode-alist '("archive-contents\\'" . emacs-lisp-mode))
 
 
-;; Rust mode
-(use-package rustic
-  :mode ("\\.rs\\'" . rustic-mode)
-  :bind (:map rustic-mode-map
-              ("C-c C-f" . rustic-format-buffer))
-  :config
-  (setq rustic-lsp-client 'eglot)
-  (with-eval-after-load 'flycheck
-    (push 'rustic-clippy flycheck-checkers)))
 
-;; Lua mode
-(use-package lua-mode
-  :mode "\\.lua\\'")
-
-;; Basic support for programming in J
-(use-package j-mode
-  :defer t
-  :hook (inferior-j-mode . (lambda () (electric-pair-mode -1)))
-  :config
-  (setq-default j-console-cmd "jconsole"))
-
-;; Markdown support
-(use-package markdown-mode
-  :mode (("\\.md\\.html\\'" . markdown-mode)
-         ("README\\.md\\'" . gfm-mode)))
-
-;; Support Yaml files
-(use-package yaml-mode
-  :mode "\\.ya?ml\\'"
-  :hook (yaml-mode . goto-address-prog-mode))
-
-;; Support for the Nix package manager
-(use-package nix-mode
-  :mode "\\.nix\\'")
-
-(use-package nixpkgs-fmt
-  :after nix-mode
-  :bind (:map nix-mode-map
-              ("C-c C-f" . nixpkgs-fmt)))
-
-;;Support MSCL mode
-(use-package mscl-mode
-  :ensure nil
-  :mode "\\.pwx?macro\\'")
-
-
-;;; LSP
+;;; Languages Server Protocol(LSP)
 
 (use-package eglot
   :defer t
@@ -1164,154 +1319,6 @@ there is no current file, eval the current buffer."
   (push :documentHighlightProvider eglot-ignored-server-capabilities)
   (setq eldoc-echo-area-use-multiline-p nil))
 
-
-;;; Configuration for quickrun
-
-(use-package quickrun
-  :bind (("<f5>" . quickrun)
-         ("C-<f5>" . quickrun-shell))
-  :config
-  (quickrun-add-command "c++/c1z"
-    '((:command . "g++")
-      (:exec    . ("%c -std=c++1z %o -o %e %s"
-		   "%e %a"))
-      (:remove  . ("%e")))
-    :default "c++"))
-
-
-;;; Org configurations
-
-(use-package org
-  :ensure nil
-  :bind (("C-c a" . org-agenda)
-         ("C-c x" . org-capture)
-         :map org-mode-map
-         ("C-c i a" . org-id-get-create)
-         ("C-c e d" . org-export-docx))
-  :config
-  ;; To speed up startup, don't put to init section
-  (setq org-hide-emphasis-markers t)
-
-  ;; Babel
-  (setq org-confirm-babel-evaluate nil
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t)
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   `((C . t)
-     (calc . t)
-     (dot . t)
-     (emacs-lisp . t)
-     (haskell . t)
-     (python . t)
-     (sql . t)
-     (sqlite . t)))
-
-  :preface
-  ;; Export to docx
-  (defun org-export-docx ()
-    (interactive)
-    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
-          (template-file (expand-file-name "template/template.docx"
-                                           user-emacs-directory)))
-      (shell-command (format "pandoc %s -o %s --reference-doc=%s"
-                             (buffer-file-name)
-                             docx-file
-                             template-file))
-      (message "Convert finish: %s" docx-file))))
-
-
-;; Writing mode similar to the famous Writeroom editor for OS X
-(use-package writeroom-mode
-  :hook (org-mode . prose-mode)
-  :preface
-  (define-minor-mode prose-mode
-    "Set up a buffer for prose editing.
-This enables or modifies a number of settings so that the
-experience of editing prose is a little more like that of a
-typical word processor."
-    :init-value nil :lighter " Prose" :keymap nil
-    (if prose-mode
-        (progn
-          (when (fboundp 'writeroom-mode)
-            (writeroom-mode 1))
-          (setq truncate-lines nil)
-          (setq word-wrap t)
-          (setq word-wrap-by-category t)
-          (setq cursor-type 'bar)
-          (when (eq major-mode 'org)
-            (kill-local-variable 'buffer-face-mode-face))
-          (buffer-face-mode 1)
-          ;;(delete-selection-mode 1)
-          (setq-local blink-cursor-interval 0.6)
-          (setq-local show-trailing-whitespace nil)
-          (setq-local line-spacing 0.2)
-          (setq-local electric-pair-mode nil)
-          (ignore-errors (flyspell-mode 1))
-          (visual-line-mode 1))
-      (kill-local-variable 'truncate-lines)
-      (kill-local-variable 'word-wrap)
-      (kill-local-variable 'word-wrap-by-category)
-      (kill-local-variable 'cursor-type)
-      (kill-local-variable 'blink-cursor-interval)
-      (kill-local-variable 'show-trailing-whitespace)
-      (kill-local-variable 'line-spacing)
-      (kill-local-variable 'electric-pair-mode)
-      (buffer-face-mode -1)
-      ;; (delete-selection-mode -1)
-      (flyspell-mode -1)
-      (visual-line-mode -1)
-      (when (fboundp 'writeroom-mode)
-        (writeroom-mode 0)))))
-
-
-;; Roam
-(when (and (executable-find "sqlite3") (executable-find "cc"))
-  (use-package org-roam
-    :diminish
-    :bind (("C-c n a" . org-roam-db-autosync-mode)
-           ("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n g" . org-roam-graph)
-           ("C-c n i" . org-roam-node-insert)
-           ("C-c n c" . org-roam-capture)
-           ("C-c n j" . org-roam-dailies-capture-today)
-           ("C-c n r" . org-roam-ref-find)
-           ("C-c n s" . org-roam-db-sync))
-    :init
-    (setq org-roam-directory (file-truename "~/.org/org-roam")
-          org-roam-db-location "~/.org/org-roam.db"
-          org-roam-db-gc-threshold most-positive-fixnum
-          org-roam-v2-ack t)
-    :config
-    (unless (file-exists-p org-roam-directory)
-      (make-directory org-roam-directory t))
-
-    (add-to-list 'display-buffer-alist
-                 '("\\*org-roam\\*"
-                   (display-buffer-in-direction)
-                   (direction . right)
-                   (window-width . 0.33)
-                   (window-height . fit-window-to-buffer)))))
-
-
-;;; Dictionaries
-(when *is-a-mac*
-  (use-package osx-dictionary
-    :bind (("C-c t i" . osx-dictionary-search-input)
-           ("C-c t x" . osx-dictionary-search-pointer))))
-
-(use-package fanyi
-  :bind (("C-c t f" . fanyi-dwim)
-         ("C-c t d" . fanyi-dwim2))
-  :config
-  (setq fanyi-haici-chart-inhibit-same-window t)
-  :custom
-  (fanyi-providers '(fanyi-haici-provider
-                     fanyi-youdao-thesaurus-provider
-                     fanyi-etymon-provider
-                     fanyi-longman-provider)))
 
 
 ;;; Spell check settings
@@ -1336,6 +1343,97 @@ typical word processor."
 (use-package flyspell-correct
   :after flyspell
   :bind (:map flyspell-mode-map ("C-," . flyspell-correct-wrapper)))
+
+
+;;; Miscellaneous config
+
+(defalias 'yes-or-no-p #'y-or-n-p)
+
+(use-package goto-addr
+  :ensure nil
+  :hook (prog-mode . goto-address-prog-mode)
+  :config
+  (setq goto-address-mail-face 'link))
+
+(use-package shift-number
+  :bind (("C-c +" . shift-number-up)
+         ("C-c -" . shift-number-down)))
+
+;; Auto save
+(use-package super-save
+  :diminish
+  :defer 0.5
+  :config
+  (add-to-list 'super-save-triggers 'switch-window)
+  (setq super-save-idle-duration 1)
+  (setq super-save-auto-save-when-idle t)
+  (setq save-silently t)
+  (super-save-mode 1))
+
+;; Rime
+
+(use-package rime
+  :if rime-usr-data-exists-p
+  :bind (("C-\\" . toggle-input-method)
+         ("C-`" . rime-send-keybinding)
+         ([f8] . rime-toggle-show-candidate))
+  :init
+  (setq
+   rime-inline-predicates '(rime-predicate-space-after-cc-p
+                            rime-predicate-current-uppercase-letter-p)
+   rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g")
+   rime-inline-ascii-trigger 'shift-r
+   rime-inline-ascii-holder ?a
+   default-input-method "rime"
+   rime-cursor "|"
+   rime-show-candidate nil
+   window-min-height 1
+   rime-user-data-dir "~/emacs-data/rime"
+   rime-title "")
+  (when (eq system-type 'windows-nt)
+    (setq rime-share-data-dir
+          "~/scoop/apps/msys2/current/mingw64/share/rime-data"))
+  (when *is-a-mac*
+    (setq rime-librime-root  "~/emacs-data/librime/dist")
+    (setq rime-emacs-module-header-root "~/.nix-profile/include"))
+  :config
+  ;; change cursor color automatically
+  (use-package im-cursor-chg
+    :ensure nil
+    :after rime
+    :config
+    (cursor-chg-mode 1))
+  :preface
+  (defconst rime-usr-data-exists-p
+    (file-exists-p "~/emacs-data/rime")
+    "Checking if there is a rime user data.")
+
+  (defun rime-toggle-show-candidate ()
+    "Use minibuffer for candidate if current is nil."
+    (interactive)
+    (if (equal rime-show-candidate nil)
+        (setq rime-show-candidate 'minibuffer)
+      (setq rime-show-candidate nil))))
+
+
+
+;;; Dictionaries
+(when *is-a-mac*
+  (use-package osx-dictionary
+    :bind (("C-c t i" . osx-dictionary-search-input)
+           ("C-c t x" . osx-dictionary-search-pointer))))
+
+(use-package fanyi
+  :bind (("C-c t f" . fanyi-dwim)
+         ("C-c t d" . fanyi-dwim2))
+  :config
+  (setq fanyi-haici-chart-inhibit-same-window t)
+  :custom
+  (fanyi-providers '(fanyi-haici-provider
+                     fanyi-youdao-thesaurus-provider
+                     fanyi-etymon-provider
+                     fanyi-longman-provider)))
+
 
 ;;; Font
 
@@ -1386,80 +1484,6 @@ typical word processor."
         (set-fontset-font t '(#x4e00 . #x9fff) font))))
 
 
-;;; Save and restore editor sessions between restarts
-
-;; Save a list of open files in ~/.emacs.d/.emacs.desktop
-(use-package desktop
-  :ensure nil
-  :config
-  (setq desktop-path (list user-emacs-directory)
-        desktop-auto-save-timeout 600)
-  
-  (advice-add 'desktop-read :around 'sanityinc/desktop-time-restore)
-  (advice-add 'desktop-create-buffer :around 'sanityinc/desktop-time-buffer-create)
-
-  ;; Save a bunch of variables to the desktop file
-  ;; for lists specify the len of the maximal saved data also
-  (setq desktop-globals-to-save
-        '((comint-input-ring        . 50)
-          (compile-history          . 30)
-          desktop-missing-file-warning
-          (dired-regexp-history     . 20)
-          (extended-command-history . 30)
-          (face-name-history        . 20)
-          (file-name-history        . 100)
-          (grep-find-history        . 30)
-          (grep-history             . 30)
-          (magit-revision-history   . 50)
-          (minibuffer-history       . 50)
-          (org-clock-history        . 50)
-          (org-refile-history       . 50)
-          (org-tags-history         . 50)
-          (query-replace-history    . 60)
-          (read-expression-history  . 60)
-          (regexp-history           . 60)
-          (regexp-search-ring       . 20)
-          register-alist
-          (search-ring              . 20)
-          (shell-command-history    . 50)
-          tags-file-name
-          tags-table-list))
-
-  (desktop-save-mode 1)
-  :preface
-  (defun sanityinc/desktop-time-restore (orig &rest args)
-    (let ((start-time (current-time)))
-      (prog1
-          (apply orig args)
-        (message "Desktop restored in %.2fms"
-                 (sanityinc/time-subtract-millis (current-time)
-                                                 start-time)))))
-  
-  (defun sanityinc/desktop-time-buffer-create (orig ver filename &rest args)
-    (let ((start-time (current-time)))
-      (prog1
-          (apply orig ver filename args)
-        (message "Desktop: %.2fms to restore %s"
-                 (sanityinc/time-subtract-millis (current-time)
-                                                 start-time)
-                 (when filename
-                   (abbreviate-file-name filename)))))))
-
-;; Restore histories and registers after saving
-
-(use-package savehist
-  :ensure nil
-  :init
-  (savehist-mode))
-
-(use-package session
-  :hook (after-init . session-initialize)
-  :config
-  (setq session-save-file (locate-user-emacs-file ".session"))
-  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
-  (setq session-save-file-coding-system 'utf-8))
-
-
 ;;; Allow access from emacsclient
 
 (use-package server
@@ -1484,8 +1508,8 @@ typical word processor."
   (set-selection-coding-system 'utf-8))
 
 
-
 (provide 'init)
+
 ;; Local Variables:
 ;; coding: utf-8
 ;; no-byte-compile: t
