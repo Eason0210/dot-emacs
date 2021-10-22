@@ -825,7 +825,8 @@ Call a second time to restore the original window configuration."
 (use-package magit
   :bind (("C-x g" . magit-status)))
 
-
+(use-package git-modes
+  :defer t)
 
 ;;; Helpers for M-x compile
 
