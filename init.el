@@ -875,6 +875,11 @@ Call a second time to restore the original window configuration."
          ("C-x M-g" . magit-dispatch))
   :init (setq-default magit-diff-refine-hunk t))
 
+(use-package fullframe
+  :after magit
+  :config
+  (fullframe magit-status magit-mode-quit-window))
+
 ;; Github integration
 (use-package forge
   :defer t
