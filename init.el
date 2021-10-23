@@ -1405,7 +1405,17 @@ there is no current file, eval the current buffer."
   (setq save-silently t)
   (super-save-mode 1))
 
-;; Rime
+
+;;; Support code and region folding
+
+(use-package origami
+  :bind (:map origami-mode-map
+              ("C-c f" . origami-recursively-toggle-node)
+              ("C-c F" . origami-toggle-all-nodes)))
+
+
+;;; Emacs-rime input method
+
 (defconst rime-usr-data-exists-p
   (file-exists-p "~/emacs-data/rime")
   "Checking if there is a rime user data.")
