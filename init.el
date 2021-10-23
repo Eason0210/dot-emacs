@@ -770,6 +770,9 @@ Call a second time to restore the original window configuration."
 (bind-key "C-." 'set-mark-command)
 (bind-key "C-x C-." 'pop-global-mark)
 
+(use-package avy
+  :bind ("C-;" . avy-goto-char-timer))
+
 ;; Multiple cursors
 (use-package multiple-cursors
   :bind (("C-<" . mc/mark-previous-like-this)
