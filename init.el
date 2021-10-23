@@ -763,6 +763,9 @@ Call a second time to restore the original window configuration."
               ("M-n" . symbol-overlay-jump-next)
               ("M-p" . symbol-overlay-jump-prev)))
 
+;; Zap *up* to char is a handy pair for zap-to-char
+(bind-key "M-Z" 'zap-up-to-char)
+
 (use-package move-dup
   :bind (
          ("C-c d" . move-dup-duplicate-down)
