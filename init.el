@@ -804,6 +804,10 @@ Call a second time to restore the original window configuration."
   :diminish whole-line-or-region-local-mode
   :hook (after-init . whole-line-or-region-global-mode))
 
+;; Highlight escape sequences
+(use-package highlight-escape-sequences
+  :hook (after-init . hes-mode))
+
 ;; Display available keybindings
 (use-package which-key
   :diminish
