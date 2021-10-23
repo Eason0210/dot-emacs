@@ -875,6 +875,10 @@ Call a second time to restore the original window configuration."
          ("C-x M-g" . magit-dispatch))
   :init (setq-default magit-diff-refine-hunk t))
 
+(use-package magit-todos
+  :defer t
+  :after magit)
+
 (use-package fullframe
   :after magit
   :config
