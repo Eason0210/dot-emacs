@@ -876,6 +876,9 @@ Call a second time to restore the original window configuration."
   :init (setq-default magit-diff-refine-hunk t))
 
 ;; Github integration
+(use-package forge
+  :defer t
+  :after magit)
 
 (use-package github-review
   :defer t)
