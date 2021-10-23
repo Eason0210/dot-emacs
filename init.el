@@ -856,11 +856,17 @@ Call a second time to restore the original window configuration."
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
 
-(use-package magit
-  :bind (("C-x g" . magit-status)))
-
+;;Git SCM support
 (use-package git-modes
   :defer t)
+
+(use-package magit
+  ;; Hint: customize `magit-repository-directories' so that you can use C-u M-F12 to
+  ;; quickly open magit on any one of your projects.
+  :bind (([(meta f12)] . magit-status)
+         ("C-x g" . magit-status)
+         ("C-x M-g" . magit-dispatch)))
+
 
 ;;; Helpers for M-x compile
 
