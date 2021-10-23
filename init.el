@@ -953,9 +953,10 @@ Call a second time to restore the original window configuration."
   :hook (after-init . projectile-mode)
   :bind-keymap
   ("C-c p" . projectile-command-map)
-  :config
+  :init
   ;; Shorter modeline
   (setq-default projectile-mode-line-prefix " Proj")
+
   (when (executable-find "rg")
     (setq-default projectile-generic-command "rg --files --hidden")))
 
