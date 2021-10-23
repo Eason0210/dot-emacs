@@ -1083,6 +1083,12 @@ typical word processor."
                    (window-height . fit-window-to-buffer)))))
 
 
+;;; Working with crontabs
+
+(use-package crontab-mode
+  :mode "\\.?cron\\(tab\\)?\\'")
+
+
 ;;; Edit Textile markup
 
 (use-package textile-mode
