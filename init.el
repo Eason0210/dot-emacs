@@ -766,6 +766,10 @@ Call a second time to restore the original window configuration."
 ;; Show matching parens
 (add-hook 'after-init-hook 'show-paren-mode)
 
+;; Handy key bindings
+(bind-key "C-." 'set-mark-command)
+(bind-key "C-x C-." 'pop-global-mark)
+
 ;; Multiple cursors
 (use-package multiple-cursors
   :bind (("C-<" . mc/mark-previous-like-this)
