@@ -1082,10 +1082,20 @@ typical word processor."
                    (window-width . 0.33)
                    (window-height . fit-window-to-buffer)))))
 
+
 ;;; Markdown support
+
 (use-package markdown-mode
   :mode (("\\.md\\.html\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode)))
+
+
+;;; CSV files
+
+(use-package csv-mode
+  :mode "\\.[Cc][Ss][Vv]\\'"
+  :config
+  (setq csv-separators '("," ";" "|" " ")))
 
 
 ;;; Web configurations
