@@ -25,7 +25,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 
 (let ((minver "26.2"))
   (when (version< emacs-version minver)
