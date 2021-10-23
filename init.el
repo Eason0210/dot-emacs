@@ -945,6 +945,25 @@ Call a second time to restore the original window configuration."
 (use-package github-review
   :defer t)
 
+
+
+;;; Use Projectile for navigation within projects
+
+(use-package projectile
+  :hook (after-init . projectile-mode)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :config
+  ;; Shorter modeline
+  (setq-default projectile-mode-line-prefix " Proj")
+  (when (executable-find "rg")
+    (setq-default projectile-generic-command "rg --files --hidden")))
+
+(use-package ibuffer-projectile
+  :after ibuffer projectile)
+
+
+
 ;;; Helpers for M-x compile
 
 (use-package compile
