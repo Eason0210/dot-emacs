@@ -865,7 +865,8 @@ Call a second time to restore the original window configuration."
   ;; quickly open magit on any one of your projects.
   :bind (([(meta f12)] . magit-status)
          ("C-x g" . magit-status)
-         ("C-x M-g" . magit-dispatch)))
+         ("C-x M-g" . magit-dispatch))
+  :init (setq-default magit-diff-refine-hunk t))
 
 
 ;;; Helpers for M-x compile
