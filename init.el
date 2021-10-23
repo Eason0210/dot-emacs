@@ -673,9 +673,6 @@ Call a second time to restore the original window configuration."
   (add-hook 'after-init-hook 'electric-pair-mode))
 (add-hook 'after-init-hook 'electric-indent-mode)
 
-;; Show matching parens
-(add-hook 'after-init-hook 'show-paren-mode)
-
 (setq-default
  blink-cursor-interval 0.4
  bookmark-default-file (locate-user-emacs-file ".bookmarks.el")
@@ -766,12 +763,8 @@ Call a second time to restore the original window configuration."
 ;; Zap *up* to char is a handy pair for zap-to-char
 (bind-key "M-Z" 'zap-up-to-char)
 
-(use-package move-dup
-  :bind (
-         ("C-c d" . move-dup-duplicate-down)
-         ("C-c u" . move-dup-duplicate-up)
-         ([M-up] . move-dup-move-lines-up)
-         ([M-down] . move-dup-move-lines-down)))
+;; Show matching parens
+(add-hook 'after-init-hook 'show-paren-mode)
 
 ;; Multiple cursors
 (use-package multiple-cursors
@@ -779,6 +772,16 @@ Call a second time to restore the original window configuration."
          ("C->" . mc/mark-next-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
          ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+
+;; Shift lines up and down with M-up and M-down. When paredit is enabled,
+;; it will use those keybindings. For this reason, you might prefer to
+;; use M-S-up and M-S-down, which will work even in lisp modes.
+(use-package move-dup
+  :bind (
+         ("C-c d" . move-dup-duplicate-down)
+         ("C-c u" . move-dup-duplicate-up)
+         ([M-up] . move-dup-move-lines-up)
+         ([M-down] . move-dup-move-lines-down)))
 
 ;; Display available keybindings
 (use-package which-key
