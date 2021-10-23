@@ -1083,6 +1083,12 @@ typical word processor."
                    (window-height . fit-window-to-buffer)))))
 
 
+;;; Edit Textile markup
+
+(use-package textile-mode
+  :mode "\\.textile\\'")
+
+
 ;;; Markdown support
 
 (use-package markdown-mode
