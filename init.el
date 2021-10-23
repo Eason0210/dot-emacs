@@ -1409,9 +1409,10 @@ there is no current file, eval the current buffer."
 ;;; Support code and region folding
 
 (use-package origami
-  :bind (:map origami-mode-map
-              ("C-c f" . origami-recursively-toggle-node)
-              ("C-c F" . origami-toggle-all-nodes)))
+  :bind (("C-c f" . origami-recursively-toggle-node)
+         ("C-c F" . origami-toggle-all-nodes))
+  :config
+  (origami-mode 1))
 
 
 ;;; Emacs-rime input method
