@@ -856,6 +856,10 @@ Call a second time to restore the original window configuration."
   (after-init . global-diff-hl-mode)
   (dired-mode . diff-hl-dired-mode))
 
+(use-package browse-at-remote
+  :bind (:map vc-prefix-map
+              ("B" . browse-at-remote)))
+
 ;;Git SCM support
 (use-package git-modes
   :defer t)
