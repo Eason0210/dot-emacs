@@ -1,3 +1,4 @@
+#+html:<a href="https://github.com/Eason0210/dot-emacs/actions"><img src="https://github.com/Eason0210/dot-emacs/workflows/CI/badge.svg" alt="Build Status" /></a>
 #+title: My Personal Emacs config
 This is my emacs configuration, it work on Mac OS X, Linux and Windows.
 And this config is customized base on [[https://github.com/purcell/emacs.d][Purcell's Emacs config]] which I used for about one year. It's a very nice config for Emacs starter, Thanks Purcell.
