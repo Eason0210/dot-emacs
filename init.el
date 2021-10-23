@@ -773,6 +773,15 @@ Call a second time to restore the original window configuration."
 (use-package avy
   :bind ("C-;" . avy-goto-char-timer))
 
+(defun kill-back-to-indentation ()
+  "Kill from point back to the first non-whitespace character on the line."
+  (interactive)
+  (let ((prev-pos (point)))
+    (back-to-indentation)
+    (kill-region (point) prev-pos)))
+
+(bind-key "C-M-<backspace>" 'kill-back-to-indentation)
+
 ;; Multiple cursors
 (use-package multiple-cursors
   :bind (("C-<" . mc/mark-previous-like-this)
