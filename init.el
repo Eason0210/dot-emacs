@@ -860,7 +860,7 @@ Call a second time to restore the original window configuration."
   :bind (:map vc-prefix-map
               ("B" . browse-at-remote)))
 
-;;Git SCM support
+;; Git SCM support
 (use-package git-modes
   :defer t)
 
@@ -875,6 +875,10 @@ Call a second time to restore the original window configuration."
          ("C-x M-g" . magit-dispatch))
   :init (setq-default magit-diff-refine-hunk t))
 
+;; Github integration
+
+(use-package github-review
+  :defer t)
 
 ;;; Helpers for M-x compile
 
