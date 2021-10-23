@@ -322,6 +322,18 @@ This is useful when followed by an immediate kill."
     (goto-char isearch-other-end)))
 
 
+;;; Configure uniquification of buffer names
+
+;; Nicer naming of buffers for files with identical names
+(use-package uniquify
+  :ensure nil
+  :config
+  (setq uniquify-buffer-name-style 'reverse)
+  (setq uniquify-separator " • ")
+  (setq uniquify-after-kill-buffer-p t)
+  (setq uniquify-ignore-buffers-re "^\\*"))
+
+
 ;;; Ibuffer settings
 
 (use-package ibuffer
