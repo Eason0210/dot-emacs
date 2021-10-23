@@ -1477,6 +1477,10 @@ there is no current file, eval the current buffer."
   :bind (("C-c +" . shift-number-up)
          ("C-c -" . shift-number-down)))
 
+(use-package shfmt
+  :bind (:map sh-mode-map
+              ("C-c C-f" . shfmt)))
+
 ;; Auto save
 (use-package super-save
   :diminish
