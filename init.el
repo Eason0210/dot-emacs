@@ -737,6 +737,13 @@ Call a second time to restore the original window configuration."
   :config
   (beacon-mode 1))
 
+;; Show line number
+(use-package display-line-numbers
+  :ensure nil
+  :hook (prog-mode . display-line-numbers-mode)
+  :config
+  (setq-default display-line-numbers-width 3))
+
 ;; Display buffer boundaries and fill column indicator
 (when (boundp 'display-fill-column-indicator)
   (setq-default indicate-buffer-boundaries 'left)
@@ -776,13 +783,6 @@ Call a second time to restore the original window configuration."
   :hook (after-init . which-key-mode)
   :config
   (setq-default which-key-idle-delay 1.5))
-
-;; Show line number
-(use-package display-line-numbers
-  :ensure nil
-  :hook (prog-mode . display-line-numbers-mode)
-  :config
-  (setq-default display-line-numbers-width 3))
 
 ;; Treat undo history as a tree
 (use-package undo-tree
