@@ -1855,13 +1855,13 @@ there is no current file, eval the current buffer."
 ;;; Font
 
 (defvar font-list
-  (cl-case system-type
-    (darwin
-     '(("SF Mono" . 130) ("Monaco" . 130) ("Menlo" . 130)))
-    (windows-nt
-     '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110)))
-    (gnu/linux
-     '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110))))
+  (cond
+   ((eq system-type 'darwin)
+    '(("SF Mono" . 130) ("Monaco" . 130) ("Menlo" . 130)))
+   ((eq system-type 'windows-nt)
+    '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110)))
+   (t
+    '(("SF Mono" . 110) ("Consolas" . 120) ("Cascadia Mono" . 110))))
   "List of fonts and sizes.  The first one available will be used.")
 
 (defun font-installed-p (font-name)
@@ -1890,18 +1890,15 @@ there is no current file, eval the current buffer."
       (set-face-attribute 'default nil :font font-name :height font-size))))
 
 (when (display-graphic-p)
-  ;; Set default font
   (change-font)
 
-  ;; Specify font for all unicode characters
-  (cl-loop for font in '("Apple Color Emoji" "Segoe UI Symbol" "Noto Color Emoji" "Symbola")
-           when (font-installed-p font)
-           return (set-fontset-font t 'unicode font nil 'prepend))
+  (dolist (font '("Segoe UI Symbol" "Apple Color Emoji" "Noto Color Emoji"))
+    (if (font-installed-p font)
+        (set-fontset-font t 'unicode font nil 'prepend)))
 
-  ;; Specify font for Chinese characters
-  (cl-loop for font in '("Microsoft Yahei" "Hiragino Sans GB" "Noto Sans Mono CJK SC")
-           when (font-installed-p font)
-           return (set-fontset-font t '(#x4e00 . #x9fff) font)))
+  (dolist (font '("Microsoft Yahei" "Hiragino Sans GB" "Noto Sans Mono CJK SC"))
+    (if (font-installed-p font)
+        (set-fontset-font t '(#x4e00 . #x9fff) font))))
 
 
 ;;; Allow access from emacsclient
