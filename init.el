@@ -1003,9 +1003,16 @@ Call a second time to restore the original window configuration."
          ("o" . org-clock-out))
   :bind-keymap ("C-c o" . sanityinc/org-global-prefix-map)
   :config
-  ;; To speed up startup, don't put to init section
-  (setq org-hide-emphasis-markers t)
-
+  ;; Various preferences
+  (setq org-log-done 'time
+        org-edit-timestamp-down-means-later t
+        org-catch-invisible-edits 'show
+        org-export-coding-system 'utf-8
+        org-fast-tag-selection-single-key 'expert
+        org-html-validation-link nil
+        org-export-kill-product-buffer-when-displayed t
+        org-tags-column 80
+        org-hide-emphasis-markers t)
   ;; Babel
   (setq org-confirm-babel-evaluate nil
         org-src-fontify-natively t
