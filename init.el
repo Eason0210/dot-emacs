@@ -1334,15 +1334,7 @@ typical word processor."
                    (display-buffer-in-direction)
                    (direction . right)
                    (window-width . 0.33)
-                   (window-height . fit-window-to-buffer)))
-    
-    (advice-add 'org-roam-node-find :after #'aqua/org-roam-db-autosync-enable))
-  :preface
-  (defun aqua/org-roam-db-autosync-enable ()
-    "Enable `org-roam-db-autosync-mode' if it is disabled."
-    (interactive)
-    (unless org-roam-db-autosync-mode
-      (org-roam-db-autosync-enable))))
+                   (window-height . fit-window-to-buffer)))))
 
 
 ;;; Working with crontabs
