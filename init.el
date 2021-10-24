@@ -986,15 +986,22 @@ Call a second time to restore the original window configuration."
     :default "c++"))
 
 
-;;; Org configurations
+;;; Org-mode config
 
 (use-package org
   :ensure nil
   :bind (("C-c a" . org-agenda)
+         ("C-c l" . org-store-link)
          ("C-c x" . org-capture)
          :map org-mode-map
          ("C-c i a" . org-id-get-create)
-         ("C-c e d" . org-export-docx))
+         ("C-c e d" . org-export-docx)
+         :map sanityinc/org-global-prefix-map
+         ("j" . org-clock-goto)
+         ("l" . org-clock-in-last)
+         ("i" . org-clock-in)
+         ("o" . org-clock-out))
+  :bind-keymap ("C-c o" . sanityinc/org-global-prefix-map)
   :config
   ;; To speed up startup, don't put to init section
   (setq org-hide-emphasis-markers t)
@@ -1014,8 +1021,9 @@ Call a second time to restore the original window configuration."
      (python . t)
      (sql . t)
      (sqlite . t)))
-
   :preface
+  (defvar sanityinc/org-global-prefix-map (make-sparse-keymap)
+    "A keymap for handy global access to org helpers, particularly clocking.")
   ;; Export to docx
   (defun org-export-docx ()
     (interactive)
