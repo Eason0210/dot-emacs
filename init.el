@@ -1337,6 +1337,20 @@ typical word processor."
                    (window-height . fit-window-to-buffer)))))
 
 
+;; org-download
+(use-package org-download
+  :hook ((org-mode . org-download-enable)
+         (dired-mode . org-download-enable))
+  :bind (:map org-mode-map
+              ("C-c i c" . org-download-clipboard)
+              ("C-c i d" . org-download-delete)
+              ("C-c i e" . org-download-edit)
+              ("C-c i s" . org-download-screenshot)
+              ("C-c i y" . org-download-yank)
+              ("C-c i n" . org-download-rename-at-point)
+              ("C-c i l" . org-download-rename-last-file)))
+
+
 ;;; Working with crontabs
 
 (use-package crontab-mode
