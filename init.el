@@ -1324,11 +1324,11 @@ typical word processor."
           org-roam-db-location "~/.org/org-roam.db"
           org-roam-db-gc-threshold most-positive-fixnum
           org-roam-v2-ack t)
-    :config
-    (org-roam-db-autosync-enable)
+    
     (unless (file-exists-p org-roam-directory)
       (make-directory org-roam-directory t))
-
+    :config
+    (org-roam-db-autosync-enable)
     (add-to-list 'display-buffer-alist
                  '("\\*org-roam\\*"
                    (display-buffer-in-direction)
