@@ -1000,7 +1000,8 @@ Call a second time to restore the original window configuration."
          ("j" . org-clock-goto)
          ("l" . org-clock-in-last)
          ("i" . org-clock-in)
-         ("o" . org-clock-out))
+         ("o" . org-clock-out)
+         ("b" . org-mark-ring-goto))
   :bind-keymap ("C-c o" . sanityinc/org-global-prefix-map)
   :config
   ;; Various preferences
