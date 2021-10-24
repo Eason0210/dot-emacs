@@ -806,8 +806,7 @@ Call a second time to restore the original window configuration."
 
 (use-package symbol-overlay
   :diminish
-  :hook
-  ((prog-mode html-mode yaml-mode conf-mode) . symbol-overlay-mode)
+  :hook ((prog-mode html-mode yaml-mode conf-mode) . symbol-overlay-mode)
   :bind (:map symbol-overlay-mode
               ("M-i" . symbol-overlay-put)
               ("M-n" . symbol-overlay-jump-next)
@@ -904,10 +903,9 @@ Call a second time to restore the original window configuration."
 (use-package diff-hl
   :bind (:map diff-hl-mode
               ("<left-fringe> <mouse-1>" . diff-hl-diff-goto-hunk))
-  :hook
-  (magit-post-refresh . diff-hl-magit-post-refresh)
-  (after-init . global-diff-hl-mode)
-  (dired-mode . diff-hl-dired-mode))
+  :hook ((magit-post-refresh . diff-hl-magit-post-refresh)
+         (after-init . global-diff-hl-mode)
+         (dired-mode . diff-hl-dired-mode)))
 
 (use-package browse-at-remote
   :bind (:map vc-prefix-map
@@ -1339,8 +1337,7 @@ typical word processor."
 
 ;; org-download
 (use-package org-download
-  :hook ((org-mode . org-download-enable)
-         (dired-mode . org-download-enable))
+  :hook ((org-mode dired-mode) . org-download-enable)
   :bind (:map org-mode-map
               ("C-c i c" . org-download-clipboard)
               ("C-c i d" . org-download-delete)
@@ -1454,10 +1451,9 @@ typical word processor."
 (use-package haskell-mode
   :bind (:map haskell-mode-map
               ("C-c C-f" . ormolu-buffer))
-  :hook
-  (haskell-mode . interactive-haskell-mode)
-  (haskell-mode . haskell-indentation-mode)
-  (haskell-mode . haskell-auto-insert-module-template))
+  :hook ((haskell-mode . interactive-haskell-mode)
+         (haskell-mode . haskell-indentation-mode)
+         (haskell-mode . haskell-auto-insert-module-template)))
 
 (use-package dante
   :after (haskell-mode flycheck)
