@@ -1020,10 +1020,15 @@ Call a second time to restore the original window configuration."
                 (add-hook
                  'window-configuration-change-hook 'org-agenda-align-tags nil t))))
 
-  ;; Capturing
+  ;; Directories settings
   (setq org-directory "~/org/agenda/")
   (setq org-default-notes-file (concat org-directory "inbox.org"))
 
+  (setq org-agenda-files (quote ("~/org/agenda")))
+  (when (file-directory-p "~/org/agenda/")
+    (setq org-agenda-files (list "~/org/agenda/")))
+
+  ;; Capturing
   (setq org-capture-templates
         `(("t" "todo" entry (file "") ; "" => `org-default-notes-file'
            "* NEXT %?\n%U\n" :clock-resume t)
