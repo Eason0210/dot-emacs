@@ -33,12 +33,14 @@ Upon starting up Emacs for the first time, further third-party packages will be 
 *** org-roam
 You need to install ~sqlite3~ in your system.
 
+The default org-roam-directory is ~$HOME/.org/org-roam~
+
 ** Updates
 Update the config with git ~pull~. And then run ~M-x, auto-package-update-now~
 
 ** Reference configurations
 1. [[https://github.com/purcell/emacs.d][Purcell/emacs.d]]
-2. [[https://github.com/seagle0128/.emacs.d][Centaur Emacs]]
-3. [[https://github.com/MatthewZMD/.emacs.d][M-EMACS]]
-4. [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][jwiegley/dot-emacs]]
+2. [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][jwiegley/dot-emacs]]
+3. [[https://github.com/seagle0128/.emacs.d][Centaur Emacs]]
+4. [[https://github.com/MatthewZMD/.emacs.d][M-EMACS]]
 5. [[https://github.com/douglasdavis/dot-emacs][douglasdavis/dot-emacs]]
