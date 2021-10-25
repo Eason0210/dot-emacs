@@ -1247,14 +1247,24 @@ Call a second time to restore the original window configuration."
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   `((C . t)
-     (calc . t)
-     (dot . t)
-     (emacs-lisp . t)
-     (haskell . t)
-     (python . t)
-     (sql . t)
-     (sqlite . t)))
+   `((emacs-lisp . t)
+     (haskell . nil)))
+
+  (defun my/org-babel-execute-src-block (&optional _arg info _params)
+    "Load language if needed"
+    (let* ((lang (nth 0 info))
+           (sym (if (member (downcase lang) '("c" "cpp" "c++")) 'C (intern lang)))
+           (backup-languages org-babel-load-languages))
+      (unless (assoc sym backup-languages)
+        (condition-case err
+            (progn
+              (org-babel-do-load-languages 'org-babel-load-languages (list (cons sym t)))
+              (setq-default org-babel-load-languages (append (list (cons sym t)) backup-languages)))
+          (file-missing
+           (setq-default org-babel-load-languages backup-languages)
+           err)))))
+
+  (advice-add 'org-babel-execute-src-block :before #'my/org-babel-execute-src-block )
   :preface
   (defvar sanityinc/org-global-prefix-map (make-sparse-keymap)
     "A keymap for handy global access to org helpers, particularly clocking.")
