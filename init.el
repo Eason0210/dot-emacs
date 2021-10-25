@@ -406,26 +406,25 @@ This is useful when followed by an immediate kill."
 ;; YASnippet
 (use-package yasnippet
   :diminish yas-minor-mode
-  :init
-  (use-package yasnippet-snippets :after yasnippet)
   :hook ((prog-mode org-mode) . yas-minor-mode)
-  :bind
-  (:map yas-minor-mode-map ("C-c C-n" . yas-expand-from-trigger-key))
-  (:map yas-keymap
-        (("TAB" . smarter-yas-expand-next-field)
-         ([(tab)] . smarter-yas-expand-next-field)))
+  :bind (("C-c y i" . yas-insert-snippet)
+         ("C-c y f" . yas-visit-snippet-file)
+         ("C-c y n" . yas-new-snippet)
+         ("C-c y t" . yas-tryout-snippet)
+         ("C-c y l" . yas-describe-tables)
+         ("C-c y g" . yas-global-mode)
+         ("C-c y m" . yas-minor-mode)
+         ("C-c y r" . yas-reload-all)
+         ("C-c y x" . yas-expand)
+         :map yas-keymap
+         ("C-i" . yas-next-field-or-maybe-expand))
   :config
-  (yas-reload-all)
-  :preface
-  (defun smarter-yas-expand-next-field ()
-    "Try to `yas-expand' then `yas-next-field' at current cursor position."
-    (interactive)
-    (let ((old-point (point))
-          (old-tick (buffer-chars-modified-tick)))
-      (yas-expand)
-      (when (and (eq old-point (point))
-                 (eq old-tick (buffer-chars-modified-tick)))
-        (ignore-errors (yas-next-field))))))
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :defer t
+  :after yasnippet)
+
 
 ;; Completion with company
 (use-package company
