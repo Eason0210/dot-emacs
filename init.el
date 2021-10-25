@@ -298,6 +298,9 @@
               ("C-c C-o" . isearch-occur)
               ("\C-\M-w" . isearch-yank-symbol)
               ([(control return)] . sanityinc/isearch-exit-other-end))
+  :config
+  (setq isearch-motion-changes-direction t)
+  (setq isearch-allow-motion t)
   :preface
   ;; Search back/forth for the symbol at point
   ;; See http://www.emacswiki.org/emacs/SearchAtPoint
