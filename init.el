@@ -1023,6 +1023,7 @@ Call a second time to restore the original window configuration."
   :config
   ;; Various preferences
   (setq org-log-done 'time
+        org-fontify-done-headline nil
         org-edit-timestamp-down-means-later t
         org-catch-invisible-edits 'show
         org-export-coding-system 'utf-8
@@ -1909,8 +1910,7 @@ there is no current file, eval the current buffer."
         (message "No fonts from the chosen set are available")
       (if (called-interactively-p 'interactive)
           (let* ((chosen (assoc-string
-                          (completing-read "What font to use? "
-                                           available-fonts nil t)
+                          (completing-read "What font to use? " available-fonts nil t)
                           available-fonts)))
             (setq font-name (car chosen)
                   font-size (read-number "Font size: " (cdr chosen))))
