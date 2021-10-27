@@ -549,11 +549,10 @@ This is useful when followed by an immediate kill."
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; (kbd "C-+")
 
+  ;; Configure `projectile' returns the project root directory.
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root))
 
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project))))))
 
 (use-package consult-flycheck
   :defer t
