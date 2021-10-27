@@ -559,7 +559,70 @@ This is useful when followed by an immediate kill."
   :defer t
   :after (consult flycheck))
 
-(use-package marginalia :init (marginalia-mode))
+(use-package marginalia
+  :init (marginalia-mode))
+
+;; Integration of Embark
+;; The command `embark-dwim' executes the default action at point.
+;; `embark-dwim' acts like `xref-find-definitions' on the symbol at point.
+;; C-. can be seen as a right-click context menu at point and M-. acts like left-click. 
+(use-package embark
+  :bind (("C-." . embark-act)
+         ("M-." . embark-dwim)
+         ("C-h B" . embark-bindings))
+  :config
+  (defun embark-which-key-indicator ()
+    "An embark indicator that displays keymaps using which-key.
+The which-key help message will show the type and value of the
+current target followed by an ellipsis if there are further
+targets."
+    (lambda (&optional keymap targets prefix)
+      (if (null keymap)
+          (which-key--hide-popup-ignore-command)
+        (which-key--show-keymap
+         (if (eq (plist-get (car targets) :type) 'embark-become)
+             "Become"
+           (format "Act on %s '%s'%s"
+                   (plist-get (car targets) :type)
+                   (embark--truncate-target (plist-get (car targets) :target))
+                   (if (cdr targets) "…" "")))
+         (if prefix
+             (pcase (lookup-key keymap prefix 'accept-default)
+               ((and (pred keymapp) km) km)
+               (_ (key-binding prefix 'accept-default)))
+           keymap)
+         nil nil t (lambda (binding)
+                     (not (string-suffix-p "-argument" (cdr binding))))))))
+
+  (setq embark-indicators
+        '(embark-which-key-indicator
+          embark-highlight-indicator
+          embark-isearch-highlight-indicator))
+
+  (defun embark-hide-which-key-indicator (fn &rest args)
+    "Hide the which-key indicator immediately when using the completing-read prompter."
+    (when-let ((win (get-buffer-window which-key--buffer
+                                       'visible)))
+      (quit-window 'kill-buffer win)
+      (let ((embark-indicators (delq #'embark-which-key-indicator embark-indicators)))
+        (apply fn args))))
+
+  (advice-add #'embark-completing-read-prompter
+              :around #'embark-hide-which-key-indicator)
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 
 ;;; Settings for hippie-expand
@@ -832,7 +895,7 @@ Call a second time to restore the original window configuration."
 (add-hook 'after-init-hook 'show-paren-mode)
 
 ;; Handy key bindings
-(bind-key "C-." 'set-mark-command)
+;; (bind-key "C-." 'set-mark-command)
 (bind-key "C-x C-." 'pop-global-mark)
 
 (use-package avy
