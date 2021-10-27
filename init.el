@@ -562,7 +562,7 @@ This is useful when followed by an immediate kill."
 (use-package marginalia
   :init (marginalia-mode))
 
-;; Integration of Embark
+;; Integration Embark with `vertico' and `consult'
 ;; The command `embark-dwim' executes the default action at point.
 ;; `embark-dwim' acts like `xref-find-definitions' on the symbol at point.
 ;; C-. can be seen as a right-click context menu at point and M-. acts like left-click. 
@@ -571,6 +571,7 @@ This is useful when followed by an immediate kill."
          ("M-." . embark-dwim)
          ("C-h B" . embark-bindings))
   :config
+  ;; Use which key like a key menu prompt
   (defun embark-which-key-indicator ()
     "An embark indicator that displays keymaps using which-key.
 The which-key help message will show the type and value of the
@@ -616,11 +617,10 @@ targets."
                  nil
                  (window-parameters (mode-line-format . none)))))
 
+
 (use-package embark-consult
   :after (embark consult)
-  :demand t ; only necessary if you have the hook below
-  ;; if you want to have consult previews as you move around an
-  ;; auto-updating embark collect buffer
+  :demand t
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
