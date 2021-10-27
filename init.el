@@ -1018,7 +1018,10 @@ Call a second time to restore the original window configuration."
          ("l" . org-clock-in-last)
          ("i" . org-clock-in)
          ("o" . org-clock-out)
-         ("b" . org-mark-ring-goto))
+         ("b" . org-mark-ring-goto)
+         :map org-src-mode-map
+         ;; I prefer C-c C-c over C-c ' (more consistent)
+         ("C-c C-c" . org-edit-src-exit))
   :bind-keymap ("C-c o" . sanityinc/org-global-prefix-map)
   :config
   ;; Various preferences
@@ -1243,7 +1246,9 @@ Call a second time to restore the original window configuration."
   
   ;; Babel
   (setq org-confirm-babel-evaluate nil
+        org-link-elisp-confirm-function nil
         org-src-fontify-natively t
+        org-src-preserve-indentation t
         org-src-tab-acts-natively t)
 
   (org-babel-do-load-languages
