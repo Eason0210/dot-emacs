@@ -1509,6 +1509,16 @@ typical word processor."
     :program "ormolu"
     :lighter " Orm"))
 
+
+;;; Python mode
+(use-package python
+  :ensure nil
+  :defer t
+  :config
+  (setq python-shell-interpreter "python3")
+  (setq python-indent-guess-indent-offset-verbose nil))
+
+
 ;;; Rust mode
 
 (use-package rustic
