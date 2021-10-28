@@ -568,7 +568,7 @@ This is useful when followed by an immediate kill."
 ;; Integration Embark with `vertico' and `consult'
 ;; The command `embark-dwim' executes the default action at point.
 ;; `embark-dwim' acts like `xref-find-definitions' on the symbol at point.
-;; C-. can be seen as a right-click context menu at point and M-. acts like left-click. 
+;; C-. can be seen as a right-click context menu at point and M-. acts like left-click.
 (use-package embark
   :bind (("C-." . embark-act)
          ("M-." . embark-dwim)
@@ -732,7 +732,7 @@ Call a second time to restore the original window configuration."
   :config
   (setq desktop-path (list user-emacs-directory)
         desktop-auto-save-timeout 600)
-  
+
   (advice-add 'desktop-read :around 'sanityinc/desktop-time-restore)
   (advice-add 'desktop-create-buffer :around 'sanityinc/desktop-time-buffer-create)
 
@@ -772,7 +772,7 @@ Call a second time to restore the original window configuration."
         (message "Desktop restored in %.2fms"
                  (sanityinc/time-subtract-millis (current-time)
                                                  start-time)))))
-  
+
   (defun sanityinc/desktop-time-buffer-create (orig ver filename &rest args)
     (let ((start-time (current-time)))
       (prog1
@@ -1063,7 +1063,7 @@ Call a second time to restore the original window configuration."
   (quickrun-add-command "c++/c1z"
     '((:command . "g++")
       (:exec    . ("%c -std=c++1z %o -o %e %s"
-		   "%e %a"))
+                   "%e %a"))
       (:remove  . ("%e")))
     :default "c++"))
 
@@ -1123,7 +1123,7 @@ Call a second time to restore the original window configuration."
            "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
           ))
 
-  
+
   ;; Refiling
 
   (setq org-refile-use-cache nil)
@@ -1308,7 +1308,7 @@ Call a second time to restore the original window configuration."
   (setq org-archive-mark-done nil)
   (setq org-archive-location "%s_archive::* Archive")
 
-  
+
   ;; Babel
   (setq org-confirm-babel-evaluate nil
         org-link-elisp-confirm-function nil
@@ -1422,7 +1422,7 @@ typical word processor."
           org-roam-db-location "~/.org/org-roam.db"
           org-roam-db-gc-threshold most-positive-fixnum
           org-roam-v2-ack t)
-    
+
     (unless (file-exists-p org-roam-directory)
       (make-directory org-roam-directory t))
     :config
@@ -1935,7 +1935,7 @@ there is no current file, eval the current buffer."
       :after rime
       :config
       (cursor-chg-mode 1))
-    :preface  
+    :preface
     (defun rime-toggle-show-candidate ()
       "Use minibuffer for candidate if current is nil."
       (interactive)
