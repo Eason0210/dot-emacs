@@ -966,6 +966,8 @@ Call a second time to restore the original window configuration."
 
 ;;; Whitespace
 
+(setq-default show-trailing-whitespace nil)
+
 (defun sanityinc/show-trailing-whitespace ()
   "Enable display of trailing whitespace in this buffer."
   (setq-local show-trailing-whitespace t))
@@ -975,6 +977,9 @@ Call a second time to restore the original window configuration."
 
 (bind-key [remap just-one-space] 'cycle-spacing)
 
+(use-package whitespace-cleanup-mode
+  :diminish
+  :hook (after-init . global-whitespace-cleanup-mode))
 
 
 ;;; Version control
