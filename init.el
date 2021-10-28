@@ -121,6 +121,11 @@
 (use-package bind-key
   :bind ("C-h y" . describe-personal-keybindings))
 
+(when (eq system-type 'windows-nt)
+  (cd "~/")
+  (setenv "LANG" "en_US"))
+
+
 ;;; Elisp helper functions and commands
 
 ;; Like diminish, but for major modes
