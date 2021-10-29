@@ -1973,7 +1973,6 @@ there is no current file, eval the current buffer."
          :picker (gts-prompt-picker)
          :engines (list (gts-bing-engine) (gts-google-engine))
          :render (gts-buffer-render)))
-  :preface
   ;; Pick directly and use Google RPC API to translate
   (defun go-translate-at-point ()
     (interactive)
