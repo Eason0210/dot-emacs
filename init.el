@@ -977,9 +977,10 @@ Call a second time to restore the original window configuration."
 
 (bind-key [remap just-one-space] 'cycle-spacing)
 
-(use-package whitespace-cleanup-mode
+;; An unobtrusive way to trim spaces from end of line
+(use-package ws-butler
   :diminish
-  :hook (after-init . global-whitespace-cleanup-mode))
+  :hook (after-init . ws-butler-global-mode))
 
 
 ;;; Version control
