@@ -2041,6 +2041,7 @@ there is no current file, eval the current buffer."
          :picker (gts-prompt-picker)
          :engines (list (gts-bing-engine) (gts-google-engine))
          :render (gts-buffer-render)))
+
   ;; Pick directly and use Google RPC API to translate
   (defun go-translate-at-point ()
     (interactive)
@@ -2048,12 +2049,14 @@ there is no current file, eval the current buffer."
                     :picker (gts-noprompt-picker)
                     :engines (gts-google-rpc-engine)
                     :render (gts-buffer-render))))
+
   ;; Pick directly and add the results into kill-ring
   (defun go-translate-save-kill-ring ()
     (interactive)
     (gts-translate (gts-translator
                     :picker (gts-noprompt-picker)
-                    :engines (gts-google-rpc-engine)
+                    :engines (gts-google-engine
+                              :parser (gts-google-summary-parser))
                     :render (gts-kill-ring-render)))))
 
 
