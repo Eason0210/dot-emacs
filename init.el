@@ -1965,6 +1965,21 @@ there is no current file, eval the current buffer."
   :config
   (origami-mode 1))
 
+;;; Toggle system input method automatically
+(use-package sis
+  :bind ("C-<f9>" . sis-switch)
+  :config
+  (when (eq system-type 'windows-nt)
+    (sis-ism-lazyman-config "1033" "2052" 'im-select))
+  (when *is-a-mac*
+    (sis-ism-lazyman-config "com.apple.keylayout.ABC" "com.apple.inputmethod.SCIM.ITABC"))
+
+  (setq sis-other-cursor-color "orange")
+  (sis-global-cursor-color-mode t)
+
+  (sis-global-respect-mode t)
+  (sis-global-context-mode t)
+  (sis-global-inline-mode t))
 
 ;;; Emacs-rime input method
 
