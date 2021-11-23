@@ -1704,6 +1704,10 @@ typical word processor."
   :mode "\\.pwx?macro\\'")
 
 
+;;; A major mode for editing AutoHotkey (AHK) script
+(use-package ahk-mode
+  :mode "\\.ahk\\'")
+
 
 ;;; Configure paredit structured editing
 
