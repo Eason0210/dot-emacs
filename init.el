@@ -1613,6 +1613,8 @@ typical word processor."
   :diminish modern-c++-font-lock-mode
   :hook (c++-mode . modern-c++-font-lock-mode))
 
+(use-package cmake-mode
+  :defer t)
 
 ;;; Haskell mode
 
