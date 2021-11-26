@@ -1007,6 +1007,10 @@ Call a second time to restore the original window configuration."
     (make-variable-buffer-local 'undo-tree-visualizer-diff)
     (setq-default undo-tree-visualizer-diff t)))
 
+;; Utilities for opening files with sudo
+(use-package sudo-edit
+  :bind ("C-c C-r" . sudo-edit))
+
 
 ;;; Whitespace
 
