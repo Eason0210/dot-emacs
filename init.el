@@ -272,6 +272,10 @@
          ("C-M--" . default-text-scale-decrease)
          ("C-M-0" . default-text-scale-reset)))
 
+;; Better pixel line scrolling
+(if (boundp 'pixel-scroll-precision-mode)
+    (pixel-scroll-precision-mode t))
+
 
 ;;; Dired mode
 
