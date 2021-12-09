@@ -934,7 +934,7 @@ Call a second time to restore the original window configuration."
 (use-package symbol-overlay
   :diminish
   :hook ((prog-mode html-mode yaml-mode conf-mode) . symbol-overlay-mode)
-  :bind (:map symbol-overlay-mode
+  :bind (:map symbol-overlay-mode-map
               ("M-i" . symbol-overlay-put)
               ("M-n" . symbol-overlay-jump-next)
               ("M-p" . symbol-overlay-jump-prev)))
@@ -1038,7 +1038,7 @@ Call a second time to restore the original window configuration."
 ;;; Version control
 
 (use-package diff-hl
-  :bind (:map diff-hl-mode
+  :bind (:map diff-hl-mode-map
               ("<left-fringe> <mouse-1>" . diff-hl-diff-goto-hunk))
   :hook ((magit-post-refresh . diff-hl-magit-post-refresh)
          (after-init . global-diff-hl-mode)
