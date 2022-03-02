@@ -1679,15 +1679,8 @@ typical word processor."
 
 ;;; Rust mode
 
-(use-package rustic
-  :mode ("\\.rs\\'" . rustic-mode)
-  :bind (:map rustic-mode-map
-              ("C-c C-f" . rustic-format-buffer))
-  :config
-  (setq rustic-lsp-client 'eglot)
-  (with-eval-after-load 'flycheck
-    (push 'rustic-clippy flycheck-checkers)))
-
+(use-package rust-mode
+  :mode "\\.rs\\'")
 
 ;;; Basic support for programming in J
 
