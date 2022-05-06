@@ -19,6 +19,8 @@ Emacs itself comes with support for many programming languages. This config adds
 - HTML
 - Rust
 
+LSP support is provided using `eglot`.
+
 ** Supported Emacs versions
 The config should run on Emacs 27.1 or greater. I use Emacs master branch personally(recently is Emacs 29.0.50).
 
