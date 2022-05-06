@@ -2094,6 +2094,11 @@ there is no current file, eval the current buffer."
 (unless (eq system-type 'windows-nt)
   (set-selection-coding-system 'utf-8))
 
+(progn ; personalize
+  (let ((file (expand-file-name "private.el" user-emacs-directory)))
+    (when (file-exists-p file)
+      (load file))))
+
 
 (provide 'init)
 

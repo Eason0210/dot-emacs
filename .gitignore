@@ -53,3 +53,4 @@ site-lisp/package/
 /devdocs
 .last-package-update-day
 flycheck_init.el
+private.el
