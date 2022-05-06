@@ -1485,7 +1485,7 @@ typical word processor."
         (writeroom-mode 0)))))
 
 ;; Roam
-(when (and (executable-find "sqlite3") (executable-find "cc"))
+(when (file-exists-p "~/.org/org-roam")
   (use-package emacsql-sqlite-builtin :after org-roam)
   (use-package org-roam
     :diminish
@@ -1505,8 +1505,6 @@ typical word processor."
     (org-roam-db-location "~/.org/org-roam.db")
     (org-roam-db-gc-threshold most-positive-fixnum)
     :config
-    (unless (file-exists-p org-roam-directory)
-      (make-directory org-roam-directory t))
     (org-roam-db-autosync-enable)
     (add-to-list 'display-buffer-alist
                  '("\\*org-roam\\*"
