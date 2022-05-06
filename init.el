@@ -1036,9 +1036,10 @@ Call a second time to restore the original window configuration."
          (after-init . global-diff-hl-mode)
          (dired-mode . diff-hl-dired-mode)))
 
-(use-package browse-at-remote
-  :bind (:map vc-prefix-map
-              ("B" . browse-at-remote)))
+(use-package git-link
+  :bind (("C-c g l" . git-link)
+         ("C-c g h" . git-link-homepage)
+         ("C-c g c" . git-link-commit)))
 
 ;; Git SCM support
 (use-package git-modes
