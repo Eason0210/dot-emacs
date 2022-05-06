@@ -411,17 +411,26 @@ This is useful when followed by an immediate kill."
   (add-hook 'ibuffer-hook 'ibuffer-set-up-preferred-filters))
 
 
-;;; Configure FlyCheck global behavior
+;;; Configure Flymake global behavior
 
 (use-package flycheck
-  :hook (after-init . global-flycheck-mode)
+  :defer t
   :config
-  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list))
+  (setq-default flycheck-disabled-checkers
+                (append (default-value 'flycheck-disabled-checkers)
+                        '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package))))
 
-(use-package flycheck-color-mode-line
-  :hook (flycheck-mode . flycheck-color-mode-line-mode)
-  :after flycheck)
+(use-package flymake-flycheck :defer t)
 
+(use-package flymake
+  :hook ((prog-mode text-mode) . flymake-mode)
+  :bind (("C-c ! n" . flymake-goto-next-error)
+         ("C-c ! p" . flymake-goto-prev-error)
+         ("C-c ! c" . flymake-start))
+  :config
+  (setq-local flymake-diagnostic-functions
+              (append flymake-diagnostic-functions
+                      (flymake-flycheck-all-chained-diagnostic-functions))))
 
 ;;; Settings for tracking recent files
 
@@ -1885,7 +1894,6 @@ there is no current file, eval the current buffer."
 (add-to-list 'auto-mode-alist '("archive-contents\\'" . emacs-lisp-mode))
 
 
-
 ;;; Languages Server Protocol(LSP)
 
 (use-package eglot
@@ -1895,7 +1903,6 @@ there is no current file, eval the current buffer."
               ("C-c l r" . eglot-rename)
               ("C-c l f" . eglot-format)
               ("C-c l d" . eldoc))
-  :hook (eglot-managed-mode . (lambda () (flymake-mode -1)))
   :config
   (setq read-process-output-max (* 1024 1024))
   (setq eldoc-echo-area-use-multiline-p nil))
