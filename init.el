@@ -118,6 +118,7 @@
 
 ;; Set up exec-path to help Emacs find programs
 (use-package exec-path-from-shell
+  :custom (exec-path-from-shell-arguments '("-l"))
   :init
   (with-eval-after-load 'exec-path-from-shell
     (dolist (var '("GPG_AGENT_INFO" "LANG" "LC_CTYPE"))
