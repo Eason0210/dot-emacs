@@ -296,11 +296,23 @@
 
 (use-package dired
   :ensure nil
+  :bind (:map dired-mode-map
+              ("e" . dired-open-externally))
+  :custom
+  (dired-dwim-target t)
+  (dired-listing-switches "-alGh")
+  (dired-recursive-copies 'always)
+  (dired-kill-when-opening-new-dired-buffer t)
   :config
-  (setq-default dired-kill-when-opening-new-dired-buffer t)
-  (setq dired-recursive-copies 'always))
+  (defun dired-open-externally (&optional arg)
+    "Open marked or current file in operating system's default application."
+    (interactive "P")
+    (dired-map-over-marks
+     (consult-file-externally (dired-get-filename))
+     arg)))
 
 (use-package diredfl
+  :after dired
   :config
   (diredfl-global-mode 1))
 
