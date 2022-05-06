@@ -449,30 +449,46 @@ This is useful when followed by an immediate kill."
   :init
   (vertico-mode))
 
-(use-package orderless
-  :hook (minibuffer-setup . sanityinc/use-orderless-in-minibuffer)
-  :config
-  (setq completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))))
-  :preface
-  (defun sanityinc/use-orderless-in-minibuffer ()
-    (setq-local completion-styles '(substring orderless))))
-
-;; A few more useful configurations...
-(use-package emacs
+(use-package minibuffer
   :ensure nil
+  :hook (minibuffer-setup . sanityinc/use-orderless-in-minibuffer)
+  :custom
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (enable-recursive-minibuffers t)
   :init
-  ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
   ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
   ;; Vertico commands are hidden in normal buffers.
   (setq read-extended-command-predicate
         #'command-completion-default-include-p)
+  :preface
+  (defun sanityinc/use-orderless-in-minibuffer ()
+    (setq-local completion-styles '(orderless))))
 
-  (setq enable-recursive-minibuffers t))
+(use-package orderless
+  :demand t
+  :config
+  (defmacro dispatch: (regexp style)
+    (cl-flet ((symcat (a b) (intern (concat a (symbol-name b)))))
+      `(defun ,(symcat "dispatch:" style) (pattern _index _total)
+         (when (string-match ,regexp pattern)
+           (cons ',(symcat "orderless-" style) (match-string 1 pattern))))))
+  (cl-flet ((pre/post (str) (format "^%s\\(.*\\)$\\|^\\(?1:.*\\)%s$" str str)))
+    (dispatch: (pre/post "=") literal)
+    (dispatch: (pre/post "`") regexp)
+    (dispatch: (pre/post (if (or minibuffer-completing-file-name
+                                 (derived-mode-p 'eshell-mode))
+                             "%" "[%.]"))
+               initialism))
+  (dispatch: "^{\\(.*\\)}$" flex)
+  (dispatch: "^\\([^][^\\+*]*[./-][^][\\+*$]*\\)$" prefixes)
+  (dispatch: "^!\\(.+\\)$" without-literal)
+  :custom
+  (orderless-matching-styles 'orderless-regexp)
+  (orderless-style-dispatchers
+   '(dispatch:literal dispatch:regexp dispatch:without-literal
+                      dispatch:initialism dispatch:flex dispatch:prefixes))
+  (orderless-component-separator #'orderless-escapable-split-on-space))
 
 
 ;; YASnippet
