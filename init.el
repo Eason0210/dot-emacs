@@ -1486,7 +1486,7 @@ typical word processor."
 
 ;; Roam
 (when (and (executable-find "sqlite3") (executable-find "cc"))
-  (use-package emacsql-sqlite-builtin :defer t)
+  (use-package emacsql-sqlite-builtin :after org-roam)
   (use-package org-roam
     :diminish
     :bind (("C-c n a" . org-id-get-create)
