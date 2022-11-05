@@ -2003,20 +2003,20 @@ there is no current file, eval the current buffer."
   (origami-mode 1))
 
 ;;; Toggle system input method automatically
-(use-package sis
-  :bind ("C-<f9>" . sis-switch)
-  :config
-  (when (eq system-type 'windows-nt)
-    (sis-ism-lazyman-config "1033" "2052" 'im-select))
-  (when *is-a-mac*
-    (sis-ism-lazyman-config "com.apple.keylayout.ABC" "com.apple.inputmethod.SCIM.ITABC"))
 
+(use-package sis
+  :demand t
+  :bind ("<f9>" . sis-switch)
+  :config
+  (add-to-list 'sis-prefix-override-keys "M-s")
+  (add-to-list 'sis-prefix-override-keys "M-g")
+  (when *is-a-mac*
+    (sis-ism-lazyman-config "com.apple.keylayout.ABC" "im.rime.inputmethod.Squirrel.Rime"))
+  (when (eq system-type 'gnu/linux)
+    (sis-ism-lazyman-config "1" "2" 'fcitx5))
   (setq sis-other-cursor-color "orange")
   (sis-global-cursor-color-mode t)
-
-  (sis-global-respect-mode t)
-  (sis-global-context-mode t)
-  (sis-global-inline-mode t))
+  (sis-global-respect-mode t))
 
 ;;; Allow access from emacsclient
 
