@@ -1990,6 +1990,9 @@ there is no current file, eval the current buffer."
   (setq save-silently t)
   (super-save-mode 1))
 
+(use-package go-translate
+  :bind ("C-c t" . gts-do-translate)
+  :custom (gts-translate-list '(("en" "zh"))))
 
 ;;; Support code and region folding
 
@@ -2014,38 +2017,6 @@ there is no current file, eval the current buffer."
   (sis-global-respect-mode t)
   (sis-global-context-mode t)
   (sis-global-inline-mode t))
-
-
-;;; Dictionaries
-
-(use-package go-translate
-  :bind (("C-c t g" . gts-do-translate)
-         ("C-c t p" . go-translate-at-point)
-         ("C-c t s" . go-translate-save-kill-ring))
-  :config
-  (setq gts-translate-list '(("en" "zh")))
-  (setq gts-default-translator
-        (gts-translator
-         :picker (gts-prompt-picker)
-         :engines (list (gts-bing-engine) (gts-google-engine))
-         :render (gts-buffer-render)))
-
-  ;; Pick directly and use Google RPC API to translate
-  (defun go-translate-at-point ()
-    (interactive)
-    (gts-translate (gts-translator
-                    :picker (gts-noprompt-picker)
-                    :engines (gts-google-rpc-engine)
-                    :render (gts-buffer-render))))
-
-  ;; Pick directly and add the results into kill-ring
-  (defun go-translate-save-kill-ring ()
-    (interactive)
-    (gts-translate (gts-translator
-                    :picker (gts-noprompt-picker)
-                    :engines (gts-google-engine
-                              :parser (gts-google-summary-parser))
-                    :render (gts-kill-ring-render)))))
 
 
 (progn ; `fontset'
