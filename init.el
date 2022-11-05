@@ -572,26 +572,22 @@ This is useful when followed by an immediate kill."
               (throw 'func-suceed t)))
           (company-complete-common))))))
 
-
 (use-package consult
-  :bind (;; C-c bindings (mode-specific-map)
-         ("C-c h" . consult-history)
+  :defer 0.5
+  :bind (("C-c h" . consult-history)
          ("C-c m" . consult-mode-command)
-         ("C-c b" . consult-bookmark)
          ("C-c k" . consult-kmacro)
-         ;; C-x bindings (ctl-x-map)
          ("C-x M-:" . consult-complex-command)
          ("C-x b" . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-x 5 b" . consult-buffer-other-frame)
-         ;; Custom M-# bindings for fast register access
+         ("C-x r b" . consult-bookmark)
+         ("C-x p b" . consult-project-buffer)
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)
          ("C-M-#" . consult-register)
-         ;; Other custom bindings
          ("M-y" . consult-yank-pop)
          ("<help> a" . consult-apropos)
-         ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
          ("M-g f" . consult-flymake)
          ("M-g g" . consult-goto-line)
@@ -601,9 +597,8 @@ This is useful when followed by an immediate kill."
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings (search-map)
-         ("M-s f" . consult-find)
-         ("M-s F" . consult-locate)
+         ("M-s d" . consult-find)
+         ("M-s D" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
@@ -612,17 +607,18 @@ This is useful when followed by an immediate kill."
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch)
+         ("M-s e" . consult-isearch-history)
          :map isearch-mode-map
-         ("M-e" . consult-isearch)
-         ("M-s e" . consult-isearch)
+         ("M-s e" . consult-isearch-history)
          ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi))
+         ("M-s L" . consult-line-multi)
+         :map minibuffer-local-map
+         ("M-s" . consult-history))
   :custom
   (register-preview-delay 0.5)
   (register-preview-function #'consult-register-format)
   (consult-narrow-key "<")
+  (xref-search-program 'ripgrep)
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref)
   :config
