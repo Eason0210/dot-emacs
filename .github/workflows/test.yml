@@ -17,10 +17,11 @@ jobs:
         emacs_version:
           - 27.1
           - 27.2
+          - 28.2
           - snapshot
         include:
           - os: macos-latest
-            emacs_version: 27.2
+            emacs_version: 28.2
     steps:
     - uses: purcell/setup-emacs@master
       with:
